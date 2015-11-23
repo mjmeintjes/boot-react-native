@@ -1,0 +1,38 @@
+* Boot React Native
+Provides several tasks that helps integrate ClojureScript with the React Native packager and build process
+PLEASE NOTE - This library is in the process of being ported from code available at https://github.com/mjmeintjes/cljs-react-native-tictactoe. This means that it will not work yet - if you are interested please see the linked example project.
+** Why?
+React Native and ClojureScript seem to be made for each other. Unfortunately, out of the box ClojureScript does not play nice with React Native.
+
+Basically, trying to get them to work together leads to the following problems:
+ * You have to set up the cljs compiler to use :optimizations :whitespace or higher - this leads to slow compilation (more than 30 seconds after each change on my PC)
+ * boot-reload and boot-cljs-repl tasks do not work
+ * You have to start up the React Native packager in a separate terminal
+
+This library aims to fix all of the above. It provides:
+ * Allows for builds with :optimizations :none - much faster builds, and 1-2 second rebuilds
+ * Allows for integration with other cljs boot tasks - cljs-repl, reload, cljs-test
+ * Provides tasks to auto start react native packager
+ * Custom transformer for react-native to speed up builds significantly
+ * Logging server to allow for capturing console.log output on command line
+** How to use?
+Simply add the tasks (react-native-devenv) and (start-rn-packager) to the end of your build tasks. For example, here's how I set up the dev pipeline for the tictactoe example app mentioned above:
+
+#+BEGIN_SRC clojure
+(deftask fast-build []
+  (set-env! :target-path "app/build")
+  (comp (serve :handler 'mattsum.simple-log-server/log
+            :port 8000)
+     (watch)
+     (reload :on-jsload 'tictactoe-android.core/on-js-reload
+             :port 8079
+             :ws-host "matt-dev")
+
+     (cljs-repl :ws-host "matt-dev"
+                :ip "0.0.0.0")
+
+     (cljs :source-map true
+           :optimizations :none)
+     (rn/react-native-devenv)
+     (rn/start-rn-packager)))
+#+END_SRC

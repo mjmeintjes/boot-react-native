@@ -1,4 +1,4 @@
-(ns mattsum.boot-rn
+(ns mattsum.boot-react-native
   {:boot/export-tasks true}
   (:require [boot.core :as c :refer [deftask with-pre-wrap]]
             [clojure.java.io :as io]
@@ -58,25 +58,21 @@
                   cljs-file
                   target-map
                   target-cljs
-                  ns]} files-to-process])
-      (when source-file
-        (io/make-parents target-file)
-        (add-provides-module-metadata source-file target-file ns)
-        (when (and (fl/exists? map-file)
-                   (fl/exists? cljs-file))
-          (new-hard-link map-file target-map)
-          (new-hard-link cljs-file target-cljs))))))
-
-(defn- get-dependency-mappings-from-file
-  [dep-file]
-  (->> dep-file
-       (str src-dir)
-       (find-file fileset)
-       (get-deps)))
+                  ns]} files-to-process]
+    (when source-file
+      (io/make-parents target-file)
+      (add-provides-module-metadata source-file target-file ns)
+      (when (and (fl/exists? map-file)
+                 (fl/exists? cljs-file))
+        (new-hard-link map-file target-map)
+        (new-hard-link cljs-file target-cljs)))))
 
 (defn- get-all-dependency-mappings
-  [deps-files]
-  (flatten (map get-dependency-mappings-from-file deps-files)))
+  [deps-files src-dir fileset]
+  (flatten (map #(->> %1
+                      (str src-dir)
+                      (find-file fileset)
+                      (get-deps)) deps-files)))
 
 (defn- get-dependency-files-from-mappings
   "Responsible for converting a list of dependency maps read from cljs_deps.js or deps.js into a data structure
@@ -99,7 +95,7 @@
 (defn- get-files-to-process
   [deps-files fileset tmp-dir src-dir]
   (-> deps-files
-      get-all-dependency-mappings
+      (get-all-dependency-mappings src-dir fileset)
       (get-dependency-files-from-mappings fileset tmp-dir src-dir)))
 
 (deftask link-goog-deps
@@ -184,7 +180,7 @@ require('" boot-main "');
      (replace-main)
      (append-to-goog)))
 
-;from boot-restart
+                                        ;from boot-restart
 (defn shell [command]
   (let [args (remove nil? (clojure.string/split command #" "))]
     (assert (every? string? args))
