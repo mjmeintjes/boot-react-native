@@ -9,14 +9,14 @@ Basically, trying to get them to work together leads to the following problems:
  * boot-reload and boot-cljs-repl tasks do not work
  * You have to start up the React Native packager in a separate terminal
 
-This library aims to fix all of the above. It provides:
+This library aims to fix all of the above. It:
  * Allows for builds with :optimizations :none - much faster builds, and 1-2 second rebuilds
  * Allows for integration with other cljs boot tasks - cljs-repl, reload, cljs-test
  * Provides tasks to auto start react native packager
  * Custom transformer for react-native to speed up builds significantly
  * Logging server to allow for capturing console.log output on command line
 ** How to use?
-Simply add the tasks (react-native-devenv) and (start-rn-packager) to the end of your build tasks. For example, here's how I set up the dev pipeline for the tictactoe example app mentioned above:
+Simply add the tasks =(react-native-devenv)= and =(start-rn-packager)= to the end of your build tasks. For example, here's how I set up the dev pipeline for the tictactoe example app mentioned above:
 
 #+BEGIN_SRC clojure
 (deftask fast-build []
