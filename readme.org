@@ -36,3 +36,9 @@ Simply add the tasks =(react-native-devenv)= and =(start-rn-packager)= to the en
      (rn/react-native-devenv)
      (rn/start-rn-packager)))
 #+END_SRC
+
+* License
+
+Copyright © 2015 Matt Meintjes
+
+Distributed under the Eclipse Public License, the same as Clojure.
