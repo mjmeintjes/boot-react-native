@@ -21,3 +21,9 @@
       :scm {:url "https://github.com/mjmeintjes/boot-react-native"}
       :license {"Eclipse Public License"
                 "http://www.eclipse.org/legal/epl-v10.html"}})
+
+(deftask dev []
+  (comp (watch)
+     (pom)
+     (jar)
+     (install)))

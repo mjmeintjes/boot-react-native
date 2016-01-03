@@ -1,5 +1,6 @@
 (set-env!
  :source-paths   #{"src"}
+ :target-path "app/build"
  :dependencies '[
                  [mattsum/boot-react-native "0.0.4-SNAPSHOT" :scope "test"]
                  [adzerk/boot-cljs               "1.7.170-3"       :scope  "test"]
@@ -28,7 +29,6 @@
  )
 
 (deftask fast-build []
-  (set-env! :target-path "app/build")
   (comp (serve :handler 'mattsum.simple-log-server/log
             :port 8000)
      (watch)
@@ -41,12 +41,12 @@
      (cljs-repl :ws-host "matt-dev"
                 :ip "0.0.0.0")
 
-     (cljs :source-map true
-           :optimizations :none
-           :pretty-print true
-           :main "mattsum.simple-example.core"
-           )
+     (cljs :main "mattsum.simple-example.core")
      (rn/react-native-devenv :server-url "matt-dev:8081")
      (rn/start-rn-packager)
      ))
 
+(deftask packager
+  []
+  (watch)
+  (rn/start-rn-packager))

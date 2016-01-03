@@ -89,7 +89,6 @@ require('" boot-main "');
 (deftask shim-goog-req
   "Appends some javascript code to goog/base.js in order for React Native to work with Google Closure files"
   [o output-dir OUT str  "The cljs :output-dir"]
-  (println "OUTPUT-DIR: " output-dir)
   (comp  (append-resource-to-output :output-dir output-dir
                                  :resource-path "mattsum/boot_rn/js/goog_base.js"
                                  :output-file "goog/base.js")))

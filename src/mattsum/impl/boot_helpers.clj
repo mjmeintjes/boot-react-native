@@ -10,10 +10,14 @@
            (c/tmp-get fileset)
            (c/tmp-file)))
 
-(defn read-resource
+(defn read-resource-
   [src]
   (println "Reading resource - " src)
   (->> src io/resource slurp))
+
+;; For some reason Clojure/boot doesn't like us reading from the jar file too often,
+;; so lets just do it once per resource path.
+(def read-resource (memoize read-resource-))
 
 (defn make-absolute
   "Makes a relative path absolute using the provided tmp dir"
