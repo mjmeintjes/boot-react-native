@@ -10,7 +10,8 @@
  */
 'use strict';
 
-const transformer = require('./node_modules/react-native/packager/transformer');
+// TODO: this should probably not be hardcoded
+const transformer = require('../../node_modules/react-native/packager/transformer');
 
 function transform(src, filename, options) {
     if (filename.indexOf('/build/') > -1){
