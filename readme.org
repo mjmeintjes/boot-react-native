@@ -47,3 +47,8 @@ To start it up:
     * Replace all references to matt-dev to your computer's hostname in build.boot
     * If using watchman you might have to restart it
 
+** Acknowledgements/Resources
+    * A lot/most of the work with regards to hot reloading came from [[https://github.com/decker405/figwheel-react-native][decker405]].
+    * Also got a lot of info from [[https://github.com/mfikes/reagent-react-native/][mfikes]], [[https://github.com/chendesheng/ReagentNativeDemo][chendesheng]], [[https://github.com/Gonzih/reagent-native][Gonzih]] and [[https://github.com/nicholaskariniemi/ReactNativeCljs][nicholaskariniemi]].
+    * [[http://cljsrn.org/][Here's]] another great resource with information about ClojureScript and React Native that helped a lot.
+    * Several other projects here on GitHub that I can't find at the moment.
