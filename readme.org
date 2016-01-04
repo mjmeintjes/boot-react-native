@@ -16,7 +16,9 @@ This library aims to fix all of the above. It:
  * Logging server to allow for capturing console.log output on command line
 ** Features
 *** Hot reloading
-Automatically reloads cljs files as you edit them. Better than normal React Native reloading because it keeps your application state, and just changes to behaviour.
+Automatically reloads cljs files as you edit them. Better than normal React Native reloading because it keeps your application state, and just changes the behaviour.
+
+Hot reloading works in both Chrome Debug mode and normal mode.
 *** NRepl support
 Integrates with normal nrepl process:
  * Setup your build pipeline (see example app)
