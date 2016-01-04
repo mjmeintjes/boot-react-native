@@ -10,6 +10,7 @@
 
 (require '[adzerk.bootlaces :refer :all]
          '[mattsum.boot-react-native])
+
 (def +version+ "0.0.4-SNAPSHOT")
 (bootlaces! +version+)
 
