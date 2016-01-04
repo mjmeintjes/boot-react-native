@@ -15,10 +15,10 @@ This library aims to fix all of the above. It:
  * Custom transformer for react-native to speed up builds significantly
  * Logging server to allow for capturing console.log output on command line
 ** How to use?
-Simply add the tasks =(react-native-devenv)= and =(start-rn-packager)= to the end of your build tasks, and =(shim-boot-reload)= to just after the reload task. There is an example in the example directory that illustrates this - here's the main task from the example:
+Simply add the tasks =(before-cljsbuild)= to your build pipeline somewhere before =(cljs)=, and =(after-cljsbuild)= to somewhere after =(cljs)=. There is an example in the example directory that illustrates this - here's the main task from the example:
 
 #+BEGIN_SRC clojure
-(deftask fast-build []
+(deftask dev []
   (comp (serve :handler 'mattsum.simple-log-server/log
                :port 8000)
         (watch)
@@ -26,14 +26,13 @@ Simply add the tasks =(react-native-devenv)= and =(start-rn-packager)= to the en
                 :port 8079
                 :ws-host "matt-dev"
                 )
-        (rn/shim-boot-reload)
+        (rn/before-cljsbuild)
 
         (cljs-repl :ws-host "matt-dev"
                    :ip "0.0.0.0")
 
         (cljs :main "mattsum.simple-example.core")
-        (rn/react-native-devenv :server-url "matt-dev:8081")
-        (rn/start-rn-packager)
+        (rn/after-cljsbuild :server-url "matt-dev:8081")
         ))
 #+END_SRC
 

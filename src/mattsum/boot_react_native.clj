@@ -156,3 +156,16 @@ require('" boot-main "');
                (util/fail "Process crashed, restarting."))
              (start-process))))
        fileset))))
+
+(deftask before-cljsbuild
+  []
+  (comp (shim-boot-reload)))
+
+(deftask after-cljsbuild
+  [o output-dir OUT str  "The cljs :output-dir"
+   a asset-path PATH str "The (optional) asset-path. Path relative to React Native app where main.js is stored."
+   s server-url SERVE str "The (optional) IP address and port for the websocket server to listen on."]
+  (comp (react-native-devenv :output-dir output-dir
+                          :asset-path asset-path
+                          :server-url server-url)
+     (start-rn-packager)))
