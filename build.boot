@@ -8,8 +8,9 @@
                  [me.raynes/conch "0.8.0"]
                  ])
 
-(require '[adzerk.bootlaces :refer :all])
-(def +version+ "0.0.3-SNAPSHOT")
+(require '[adzerk.bootlaces :refer :all]
+         '[mattsum.boot-react-native])
+(def +version+ "0.0.4-SNAPSHOT")
 (bootlaces! +version+)
 
 (task-options!
@@ -20,3 +21,9 @@
       :scm {:url "https://github.com/mjmeintjes/boot-react-native"}
       :license {"Eclipse Public License"
                 "http://www.eclipse.org/legal/epl-v10.html"}})
+
+(deftask dev []
+  (comp (watch)
+     (pom)
+     (jar)
+     (install)))

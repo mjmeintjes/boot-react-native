@@ -2,6 +2,13 @@
  */
 if (typeof global !== 'undefined') {
     global.goog = goog; //Set's up the goog object in global namespace, because React Native runs everything in it's own function, and doesn't expose variables declared by default.
+
+    //TODO: this should probably not be in here
+    //React Native throws error because it does not support group logging
+    console.groupCollapsed = console.groupCollapsed || console.log;
+    console.group = console.group || console.log;
+    console.groupEnd = function() {};
+
     goog.provide = function(name) {
         if (goog.isProvided_(name)) {
             return; //don't throw an error when called multiple times, because it is going to be called multiple times in from react-native
@@ -23,7 +30,34 @@ if (typeof global !== 'undefined') {
         try {
             require(name);
         } catch (e) {
-            console.log(e);
+            console.warn("Error while loading " + name);
+            console.error(e);
         }
     };
 }
+
+// Overrides environment to make other tools that expect browser environment work
+function fakeLocalStorageAndDocument() {
+    window.localStorage = {};
+    window.localStorage.getItem = function() { console.warn('localStorage is faked - see goog/base.js');
+                                               return 'true'; };
+    window.localStorage.setItem = function() { console.warn('localStorage is faked - see goog/base.js'); };
+
+    window.document = {};
+    window.document.body = {};
+    window.document.body.dispatchEvent = function() { console.warn('dispatchEvent is faked - see goog/base.js'); };
+    window.document.createElement = function() {  console.warn('createElement is faked - see goog/base.js'); };
+
+    if (typeof window.location === 'undefined') {
+        console.log('Shimming window.location');
+        window.location = {};
+        window.location.href = "http://example.org";
+        window.location.protocol = "http"; //for boot-reload "connect" event
+    } else {
+        console.warn('Not shimming window.location - location already set to ' + window.location.href);
+    }
+    window.addEventListener = function() {};
+}
+fakeLocalStorageAndDocument();
+
+
