@@ -37,20 +37,8 @@ Simply add the tasks =(react-native-devenv)= and =(start-rn-packager)= to the en
         ))
 #+END_SRC
 
-* Example App
-There is an example app to demonstrate using this plugin.
+* License
 
-To start it up:
- * Run =npm install= inside example/app
- * Run =boot fast-build= inside example
- * Install app on your phone/emulator (should be connected via adb) - =(cd example/app/android && ./gradlew installDebug "$@")=
- * Replace all references to matt-dev to your computer's hostname in build.boot
- * If using watchman you might have to restart it
+Copyright © 2015 Matt Meintjes
 
-* Acknowledgements/Resources
- * A lot/most of the work with regards to hot reloading came from [[https://github.com/decker405/figwheel-react-native][decker405]].
- * Also got a lot of info from [[https://github.com/mfikes/reagent-react-native/][mfikes]], [[https://github.com/chendesheng/ReagentNativeDemo][chendesheng]], [[https://github.com/Gonzih/reagent-native][Gonzih]] and [[https://github.com/nicholaskariniemi/ReactNativeCljs][nicholaskariniemi]].
- * [[http://cljsrn.org/][Here's]] another great resource with information about ClojureScript and React Native that helped a lot.
- * Several other projects here on GitHub that I can't find at the moment.
-
-
+Distributed under the Eclipse Public License, the same as Clojure.
