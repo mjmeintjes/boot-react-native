@@ -34,9 +34,12 @@ public class MainActivity extends Activity implements DefaultHardwareBackBtnHand
 
 
         mReactRootView.startReactApplication(mReactInstanceManager, "SimpleExampleApp", null);
+        //Fix for RN's facility to change the URL when running in GenyMotion - I want RN to read
+        //bundle from my dev machine, not from server running GenyMotion emulator
+        //NOTE: this requires adb reverse tcp:8081 tcp:8081 to be run.
         SharedPreferences preferences =
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        preferences.edit().putString("debug_http_host", "matt-dev:8081").apply();
+        preferences.edit().putString("debug_http_host", "localhost:8081").apply();
 
         setContentView(mReactRootView);
     }
