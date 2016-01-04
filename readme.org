@@ -14,6 +14,14 @@ This library aims to fix all of the above. It:
  * Provides tasks to auto start react native packager
  * Custom transformer for react-native to speed up builds significantly
  * Logging server to allow for capturing console.log output on command line
+** Features
+*** Hot reloading
+Automatically reloads cljs files as you edit them. Better than normal React Native reloading because it keeps your application state, and just changes to behaviour.
+*** NRepl support
+Integrates with normal nrepl process:
+ * Setup your build pipeline (see example app)
+ * Start your build pipeline (=boot dev= in example app)
+ * In another terminal, connect to repl using =boot repl -c=
 ** How to use?
 Simply add the tasks =(before-cljsbuild)= to your build pipeline somewhere before =(cljs)=, and =(after-cljsbuild)= to somewhere after =(cljs)=. There is an example in the example directory that illustrates this - here's the main task from the example:
 
@@ -36,6 +44,10 @@ Simply add the tasks =(before-cljsbuild)= to your build pipeline somewhere befor
         ))
 #+END_SRC
 
+* Limitations
+ALPHA quality - task names, api, etc can and probably will still change. Lots of testing still needs to be done. Several additional features are planned.
+
+This should work with Android and IOS. However, so far it has only been tested with Android.
 * Example App
 There is an example app to demonstrate using this plugin.
 
