@@ -1,4 +1,5 @@
 * Boot React Native
+[![Clojars Project](https://img.shields.io/clojars/v/mattsum/boot-react-native.svg)](https://clojars.org/mattsum/boot-react-native)
 Provides several tasks that helps integrate ClojureScript with the React Native packager and build process
 ** Why?
 React Native and ClojureScript seem to be made for each other. Unfortunately, out of the box ClojureScript does not play nice with React Native.
