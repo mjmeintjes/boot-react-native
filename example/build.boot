@@ -1,6 +1,7 @@
 (set-env!
- :source-paths   #{"src"}
+ :source-paths   #{"src" "react-support"}
  :target-path "app/build"
+ :exclusions ['cljsjs/react]
  :dependencies '[
                  [mattsum/boot-react-native "0.1.0-SNAPSHOT" :scope "test"]
                  [adzerk/boot-cljs               "1.7.170-3"       :scope  "test"]
@@ -13,6 +14,7 @@
                  [org.clojure/tools.nrepl        "0.2.12"          :scope  "test"]
                  [org.clojure/clojure            "1.7.0"]
                  [org.clojure/clojurescript      "1.7.170"]
+                 [reagent                        "0.5.1"]
                  ]
  :mirrors {#"clojars" {:name "mr1"
                        :url "https://clojars-mirror.tcrawley.org/repo/"}})
