@@ -16,7 +16,8 @@
 (load-file "testing/utils.clj")
 (load-file "testing/appium.clj")
 (require '[clojure.reflect :as r]
-         '[appium-clj.appium :as app])
+         '[appium-clj.appium :as app]
+         '[clojure.string :as str])
 (use 'alex-and-georges.debug-repl)
 (use '[clojure.pprint :only [pprint]])
 
@@ -32,7 +33,11 @@
     (.setCapability "noReset" true)
     (.setCapability "newCommandTimeout" 600))
 
-    (AndroidDriver. (URL. "http://127.0.0.1:4723/wd/hub") cap)))
+    (let [driver  (AndroidDriver. (URL. "http://127.0.0.1:4723/wd/hub") cap)]
+      (.addShutdownHook (Runtime/getRuntime) (Thread. (fn[] (when driver
+                                                             (println "Closing AndroidDriver")
+                                                             (.quit driver)))))
+      driver)))
 
 (defn wait-for
   [pred msg]
@@ -55,23 +60,40 @@
   [text]
   (wait-for #(first (find-elements-by-text text)) text))
 
-(defn -main [& args]
-  #_(pprint (macroexpand-1 '(app/run press-key-code 82)))
-  (let [driver (get-driver)]
-    (try
-      (app/run-on-device
-       false driver
-       (fn []
-         (wait-for-text "Welcome to React")
-         (debug-repl)
-         ;; (app/run press-key-code 82 (Integer. 1))
-         ;; (.click (first (app/run find-elements-by-xPath "//*[@text=\"Reload JS\"]")))
-         ;; (.click (first (app/run find-elements-by-xPath "//*[contains(@text, \"Debug server\")]")))
-         ;;(.sendKeys (first (app/run find-elements-by-xPath "//*[contains(@class, \"android.widget.EditText\")]")) (into-array ["matt-dev:8081"]))
-         ;;(println (app/run find-elements-by-xPath "//*[@text=\"OK\"]"))
-         ;;(.click (first (app/run find-elements-by-xPath "//*[@text=\"OK\"]")))
-         ;(app/run press-key-code 4 nil)
+(defn reload-js []
+  (app/run press-key-code 82 (Integer. 1))
+  (.click (first (app/run find-elements-by-xPath "//*[@text=\"Reload JS\"]"))))
 
-         ))
-      (finally
-        (.quit driver)))))
+(defn -main [& args]
+  "Simple integration test for reloading. Requires boot and packager to have started up before running. Also requires appium server to be running (npm install -g appium && appium).
+Also ensure that Android device is connected via adb and that SimpleExampleApp has been installed (gradle installDebug)."
+
+  (let [driver (get-driver)
+        source-path "src/mattsum/simple_example/core.cljs"
+        content (slurp source-path)]
+    (.addShutdownHook (Runtime/getRuntime) (Thread. (fn[] (spit source-path content))))
+
+    (app/run-on-device
+     false driver
+     (fn []
+       (reload-js)
+
+       (wait-for-text "HELLO WORLD")
+       (spit source-path (str/replace content "CHANGE THIS: HELLO WORLD" "CHANGE THIS: GOODBYE WORLD"))
+       (wait-for-text "GOODBYE WORLD")
+       (spit source-path (str/replace content "CHANGE THIS: GOODBYE WORLD" "CHANGE THIS: HELLO WORLD"))
+       (wait-for-text "HELLO WORLD")
+       (println "")
+       (println "")
+       (println "")
+       (println "----------------------------------------------------")
+       (println "INTEGRATION TEST RESULTS")
+       (println "========================")
+       (println "Hot reloading works")
+       (println "----------------------------------------------------")
+       (println "")
+       (println "")
+       (println "")
+
+       ))
+    ))

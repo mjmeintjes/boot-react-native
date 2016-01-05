@@ -20,8 +20,9 @@ wait-for-url() {
     done
     echo $1 found
 }
-echo "Running fast-build"
+echo "Running integration tests"
+echo "Please ensure that Android device is connected to adb, otherwise these tests won't work."
 boot fast-build &
-BOOTPID=$!
-echo "Current process ID - $$"
+appium &
 wait-for-url "http://localhost:8081/index.android.bundle?platform=android"
+./integration-tests.boot
