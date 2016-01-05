@@ -3,7 +3,7 @@
  :target-path "app/build"
  :exclusions ['cljsjs/react]
  :dependencies '[
-                 [mattsum/boot-react-native "0.0.4-SNAPSHOT" :scope "test"]
+                 [mattsum/boot-react-native "0.1.0-SNAPSHOT" :scope "test"]
                  [adzerk/boot-cljs               "1.7.170-3"       :scope  "test"]
                  [adzerk/boot-cljs-repl          "0.3.0"           :scope  "test"]
                  [adzerk/boot-reload             "0.4.2"           :scope  "test"]
@@ -38,14 +38,13 @@
              :port 8079
              :ws-host "matt-dev"
              )
-     (rn/shim-boot-reload)
+     (rn/before-cljsbuild)
 
      (cljs-repl :ws-host "matt-dev"
                 :ip "0.0.0.0")
 
      (cljs :main "mattsum.simple-example.core")
-     (rn/react-native-devenv :server-url "matt-dev:8081")
-     (rn/start-rn-packager)
+     (rn/after-cljsbuild :server-url "matt-dev:8081")
      ))
 
 (deftask packager

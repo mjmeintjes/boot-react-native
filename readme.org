@@ -14,11 +14,21 @@ This library aims to fix all of the above. It:
  * Provides tasks to auto start react native packager
  * Custom transformer for react-native to speed up builds significantly
  * Logging server to allow for capturing console.log output on command line
+** Features
+*** Hot reloading
+Automatically reloads cljs files as you edit them. Better than normal React Native reloading because it keeps your application state, and just changes the behaviour.
+
+Hot reloading works in both Chrome Debug mode and normal mode.
+*** NRepl support
+Integrates with normal nrepl process:
+ * Setup your build pipeline (see example app)
+ * Start your build pipeline (=boot dev= in example app)
+ * In another terminal, connect to repl using =boot repl -c=
 ** How to use?
-Simply add the tasks =(react-native-devenv)= and =(start-rn-packager)= to the end of your build tasks, and =(shim-boot-reload)= to just after the reload task. There is an example in the example directory that illustrates this - here's the main task from the example:
+Simply add the tasks =(before-cljsbuild)= to your build pipeline somewhere before =(cljs)=, and =(after-cljsbuild)= to somewhere after =(cljs)=. There is an example in the example directory that illustrates this - here's the main task from the example:
 
 #+BEGIN_SRC clojure
-(deftask fast-build []
+(deftask dev []
   (comp (serve :handler 'mattsum.simple-log-server/log
                :port 8000)
         (watch)
@@ -26,17 +36,20 @@ Simply add the tasks =(react-native-devenv)= and =(start-rn-packager)= to the en
                 :port 8079
                 :ws-host "matt-dev"
                 )
-        (rn/shim-boot-reload)
+        (rn/before-cljsbuild)
 
         (cljs-repl :ws-host "matt-dev"
                    :ip "0.0.0.0")
 
         (cljs :main "mattsum.simple-example.core")
-        (rn/react-native-devenv :server-url "matt-dev:8081")
-        (rn/start-rn-packager)
+        (rn/after-cljsbuild :server-url "matt-dev:8081")
         ))
 #+END_SRC
 
+* Limitations
+ALPHA quality - task names, api, etc can and probably will still change. Lots of testing still needs to be done. Several additional features are planned.
+
+This should work with Android and IOS. However, so far it has only been tested with Android.
 * Example App
 There is an example app to demonstrate using this plugin.
 
@@ -53,4 +66,8 @@ To start it up:
  * [[http://cljsrn.org/][Here's]] another great resource with information about ClojureScript and React Native that helped a lot.
  * Several other projects here on GitHub that I can't find at the moment.
 
+* License
 
+Copyright © 2015 Matt Meintjes
+
+Distributed under the Eclipse Public License, the same as Clojure.
