@@ -1,12 +1,17 @@
 (ns mattsum.simple-example.core
   (:require [reagent.core :as reag :refer [atom]]))
 
-(enable-console-print!)
+#_(enable-console-print!)
+
 
 (set! js/React (js/require "react-native/Libraries/react-native/react-native.js"))
 
 (def view (reag/adapt-react-class (.-View js/React)))
 (def text (reag/adapt-react-class (.-Text js/React)))
+
+(defn testf
+  []
+  (println "TESTING"))
 
 (defn root-view
   []

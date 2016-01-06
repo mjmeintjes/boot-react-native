@@ -1,9 +1,9 @@
 (set-env!
  :source-paths   #{"src" "react-support"}
- :target-path "app/build"
+ ;:target-path "app/build"
  :exclusions ['cljsjs/react]
  :dependencies '[
-                 [mattsum/boot-react-native "0.1.0-SNAPSHOT" :scope "test"]
+                 [mattsum/boot-react-native "0.1.1-SNAPSHOT" :scope "test"]
                  [adzerk/boot-cljs               "1.7.170-3"       :scope  "test"]
                  [adzerk/boot-cljs-repl          "0.3.0"           :scope  "test"]
                  [adzerk/boot-reload             "0.4.2"           :scope  "test"]
@@ -16,8 +16,7 @@
                  [org.clojure/clojurescript      "1.7.170"]
                  [reagent                        "0.5.1"]
                  ]
- :mirrors {#"clojars" {:name "mr1"
-                       :url "https://clojars-mirror.tcrawley.org/repo/"}})
+ )
 
 (require
  '[adzerk.boot-cljs             :refer  [cljs]]
@@ -45,6 +44,7 @@
 
      (cljs :main "mattsum.simple-example.core")
      (rn/after-cljsbuild :server-url "matt-dev:8081")
+     (target :dir ["app/build"])
      ))
 
 (deftask packager

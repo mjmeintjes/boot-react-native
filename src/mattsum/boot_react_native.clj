@@ -33,6 +33,7 @@
         (let [files-to-process (get-files-to-process deps-files fileset output-dir src-dir)]
           (setup-links-for-dependency-map files-to-process))
 
+        (println "Adding " output-dir " to fileset")
         (-> fileset
             (c/add-resource output-dir)
             c/commit!)))))
@@ -64,23 +65,28 @@ require('" boot-main "');
             c/commit!)))))
 
 
-(deftask append-resource-to-output
+(deftask add-resource-to-output
   "Appends text in specified resource path to goog/base.js"
   [o output-dir OUT str  "The cljs :output-dir"
    r resource-path RES str "Path to resource to append"
    j output-file FIL str "Output file to append to"
-   p replacements REP edn "List of replacements to make in resource file (for basic templating, e.g. [[\"var1\" \"VALUE1\"}]] will replace var1 with VALUE1 in output)"]
-  (with-pre-wrap fileset
-    (-> fileset
-        (bh/append-resource-to-file (bh/output-file-path output-dir output-file) resource-path (or replacements []))
-        c/commit!)))
+   p replacements REP edn "List of replacements to make in resource file (for basic templating, e.g. [[\"var1\" \"VALUE1\"}]] will replace var1 with VALUE1 in output)"
+   a action ACT kw "Where to insert resource"]
+
+  (let [modify-fn (if (= action :prepend)
+                    bh/prepend-to-file
+                    bh/append-to-file)]
+    (with-pre-wrap fileset
+      (-> fileset
+          (bh/add-resource-to-file (bh/output-file-path output-dir output-file) resource-path (or replacements []) modify-fn)
+          c/commit!))))
 
 (deftask shim-goog-reloading
   "Appends some javascript to goog/base.js in order for boot-reload to work automatically"
   [o output-dir OUT str  "The cljs :output-dir"
    a asset-path PATH str "The (optional) asset-path. Path relative to React Native app where main.js is stored."
    s server-url SERVE str "The (optional) IP address and port for the websocket server to listen on."]
-  (append-resource-to-output :output-dir output-dir
+  (add-resource-to-output :output-dir output-dir
                              :resource-path "mattsum/boot_rn/js/reloading.js"
                              :output-file "goog/net/jsloader.js"
                              :replacements [["{{ asset-path }}" (str "/" (or asset-path "build"))]
@@ -89,9 +95,13 @@ require('" boot-main "');
 (deftask shim-goog-req
   "Appends some javascript code to goog/base.js in order for React Native to work with Google Closure files"
   [o output-dir OUT str  "The cljs :output-dir"]
-  (comp  (append-resource-to-output :output-dir output-dir
+  (comp  (add-resource-to-output :output-dir output-dir
                                  :resource-path "mattsum/boot_rn/js/goog_base.js"
-                                 :output-file "goog/base.js")))
+                                 :output-file "goog/base.js")
+      (add-resource-to-output :output-dir output-dir
+                                 :resource-path "mattsum/boot_rn/js/goog_base_prepend.js"
+                                 :output-file "goog/base.js"
+                                 :action :prepend)))
 
 
 (deftask shim-boot-reload
@@ -114,6 +124,45 @@ require('" boot-main "');
                                        ns
                                        temp))))
 
+(deftask shim-repl-print
+  "Weasel's repl-print function does not work in React Native
+   TODO: Add PR for changing this function in Weasel code"
+  []
+  (let [ns 'mattsum.boot-react-native.shim-repl-print
+        temp (template
+              ((ns ~ns
+                 (:require [weasel.repl :as repl]
+                           [clojure.browser.net :as net]))
+               (aset js/weasel.repl "repl_print"
+                     (fn [& args]
+                       (when-let [conn @repl/ws-connection]
+                         (.apply (.-log js/console) js/console (into-array args))
+                         (net/transmit @repl/ws-connection
+                                       (pr-str {:op :print :value (apply pr-str args)})))))
+               ))]
+    (c/with-pre-wrap fileset
+      (bh/add-cljs-template-to-fileset fileset
+                                       nil
+                                       ns
+                                       temp))))
+
+#_(deftask shim-browser-repl-bootstrap
+  "We are already shimming goog.require and goog.provide - don't want repl bootstrap to do anything"
+  []
+  (let [ns 'mattsum.boot-react-native.shim-browser-repl-bootstrap
+        temp (template
+              ((ns ~ns
+                 (:require [clojure.browser.repl :as repl]))
+               (aset js/clojure.browser.repl "bootstrap"
+                     (fn []
+                       ()))
+               ))]
+    (c/with-pre-wrap fileset
+      (bh/add-cljs-template-to-fileset fileset
+                                       nil
+                                       ns
+                                       temp))))
+
 (deftask react-native-devenv
   [o output-dir OUT str  "The cljs :output-dir"
    a asset-path PATH str "The (optional) asset-path. Path relative to React Native app where main.js is stored."
@@ -129,9 +178,10 @@ require('" boot-main "');
 
 (deftask start-rn-packager
   "Starts the React Native packager. Includes a custom transformer that skips transformation for ClojureScript generated files."
-  [a app-dir OUT str  "The (relative) path to the React Native application"]
+  [a app-dir OUT str  "The (relative) path to the React Native application"
+   t target-path TAR str "The (relative) path to the build directory (e.g. app/build)"]
   (let [app-dir (or app-dir "app")
-        build-dir (c/get-env :target-path)
+        build-dir (or target-path (str app-dir "/build"))
         transformer-rel-path "transformer/cljs-rn-transformer.js"
         transformer-path (bh/write-resource-to-path
                           "mattsum/boot_rn/js/cljs-rn-transformer.js"
@@ -159,7 +209,10 @@ require('" boot-main "');
 
 (deftask before-cljsbuild
   []
-  (comp (shim-boot-reload)))
+  (comp #_(shim-browser-repl-bootstrap) ;NOT USED order matters - needs to be before repl-print
+     (shim-boot-reload)
+     (shim-repl-print)
+     ))
 
 (deftask after-cljsbuild
   [o output-dir OUT str  "The cljs :output-dir"
