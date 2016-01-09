@@ -26,7 +26,11 @@
     (require '[mattsum.simple-example.core :as core :refer [view text]]
              '[reagent.core :as reag])
     (reag/render [core/view [core/text "CHANGED BY REPL"]] 1))
-   (wait-for-text "CHANGED BY REPL")))
+   (wait-for-text "CHANGED BY REPL"))
+  (testing-on-device
+   "Println should work"
+   (run-in-app-repl
+    (println "THIS SHOULD NOT THROW AN EXCEPTION"))))
 
 (deftest reloading
   (testing-on-device
