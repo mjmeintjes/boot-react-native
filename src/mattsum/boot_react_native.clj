@@ -33,7 +33,7 @@
         (let [files-to-process (get-files-to-process deps-files fileset output-dir src-dir)]
           (setup-links-for-dependency-map files-to-process))
 
-        (println "Adding " output-dir " to fileset")
+        (util/info "Adding %s to fileset\n" output-dir)
         (-> fileset
             (c/add-resource output-dir)
             c/commit!)))))
@@ -177,15 +177,15 @@ require('" boot-main "');
            (c/commit!))
        )
      (c/with-post-wrap fileset
-       (println "Starting React Packager - " command)
+       (util/info "Starting React Packager - %s\n" command)
        (let [start-process #(reset! process (shell command))]
          (when (nil? @process)
            (start-process))
          (let [exit (exit-code @process)]
            (when (realized? exit) ;;restart server if necessary
              (if (= 0 @exit)
-               (util/warn "Process exited normally, restarting.")
-               (util/fail "Process crashed, restarting."))
+               (util/warn "Process exited normally, restarting.\n")
+               (util/fail "Process crashed, restarting.\n"))
              (start-process))))
        fileset))))
 

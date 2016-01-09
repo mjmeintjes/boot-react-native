@@ -28,10 +28,13 @@ if (typeof global !== 'undefined') {
     var orig_require = goog.require;
     goog.require = function(name) {
         var oldErrorReporter = global.ErrorUtils.reportFatalError;
+        //disable React error checking while we try to require
+        //because we want to be able to try goog.require as well
         global.ErrorUtils.reportFatalError = function(e) { throw new Exception(e);};
         try {
             require(name);
         } catch (e) {
+            //Try default goog.require behaviour
             var oldDebugLoader = goog.ENABLE_DEBUG_LOADER;
             goog.ENABLE_DEBUG_LOADER = true;
             try {

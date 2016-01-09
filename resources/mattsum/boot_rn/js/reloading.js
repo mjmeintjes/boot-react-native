@@ -70,6 +70,7 @@
             src = "/" + src; 
         }
         if (src.startsWith("/goog")){
+            //TODO: this should probably not be hardcoded to main.out
             src = "/main.out" + src;
         }
         var jsUrl = config.basePath + src;
