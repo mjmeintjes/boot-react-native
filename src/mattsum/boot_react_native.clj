@@ -106,7 +106,6 @@ require('" boot-main "');
 
 (deftask shim-boot-reload
   []
-  ;; TODO: this should run on ClojureScript side
   (let [ns 'mattsum.boot-react-native.shim-boot-reload
         temp (template
               ((ns ~ns
@@ -139,23 +138,6 @@ require('" boot-main "');
                          (.apply (.-log js/console) js/console (into-array args))
                          (net/transmit @repl/ws-connection
                                        (pr-str {:op :print :value (apply pr-str args)})))))
-               ))]
-    (c/with-pre-wrap fileset
-      (bh/add-cljs-template-to-fileset fileset
-                                       nil
-                                       ns
-                                       temp))))
-
-#_(deftask shim-browser-repl-bootstrap
-  "We are already shimming goog.require and goog.provide - don't want repl bootstrap to do anything"
-  []
-  (let [ns 'mattsum.boot-react-native.shim-browser-repl-bootstrap
-        temp (template
-              ((ns ~ns
-                 (:require [clojure.browser.repl :as repl]))
-               (aset js/clojure.browser.repl "bootstrap"
-                     (fn []
-                       ()))
                ))]
     (c/with-pre-wrap fileset
       (bh/add-cljs-template-to-fileset fileset
@@ -207,9 +189,30 @@ require('" boot-main "');
              (start-process))))
        fileset))))
 
+(deftask shim-browser-repl-bootstrap
+  "Prevents bootstrap from running twice and causing goog.require to loop indefinitely"
+  []
+  (let [ns 'mattsum.boot-react-native.shim-browser-repl-bootstrap
+        temp (template
+              ((ns ~ns
+                 (:require [clojure.browser.repl :as repl]))
+               (defonce orig-bootstrap repl/bootstrap)
+               (aset js/clojure.browser.repl "bootstrap"
+                     (fn []
+                       (when (.-require__ js/goog)
+                         (set! js/goog.require (.-require__ js/goog))
+                         (orig-bootstrap))
+                       ))
+               ))]
+    (c/with-pre-wrap fileset
+      (bh/add-cljs-template-to-fileset fileset
+                                       nil
+                                       ns
+                                       temp))))
+
 (deftask before-cljsbuild
   []
-  (comp #_(shim-browser-repl-bootstrap) ;NOT USED order matters - needs to be before repl-print
+  (comp (shim-browser-repl-bootstrap)
      (shim-boot-reload)
      (shim-repl-print)
      ))

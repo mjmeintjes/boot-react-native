@@ -30,14 +30,11 @@ if (typeof global !== 'undefined') {
         var oldErrorReporter = global.ErrorUtils.reportFatalError;
         global.ErrorUtils.reportFatalError = function(e) { throw new Exception(e);};
         try {
-            console.log("Trying to get from react-native require" + name);
             require(name);
-            console.log("Found from react-native require");
         } catch (e) {
             var oldDebugLoader = goog.ENABLE_DEBUG_LOADER;
             goog.ENABLE_DEBUG_LOADER = true;
             try {
-                console.log("Trying to get from goog.require " + name);
                 orig_require.call(goog, name);
             } catch (e) {
                 console.warn("Error while loading " + name);

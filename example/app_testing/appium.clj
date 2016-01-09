@@ -1,4 +1,4 @@
-(ns appium-clj.appium
+(ns app-testing.appium
   (:require [clojure.java.io :as io]
             [camel-snake-kebab.core :as cm])
   (:import io.appium.java_client.AppiumDriver

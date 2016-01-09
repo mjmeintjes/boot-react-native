@@ -25,4 +25,5 @@ echo "Please ensure that Android device is connected to adb, otherwise these tes
 boot fast-build &
 appium &
 wait-for-url "http://localhost:8081/index.android.bundle?platform=android"
+read
 ./integration-tests.boot

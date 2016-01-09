@@ -11,7 +11,8 @@
 
 (defn testf
   []
-  (println "TESTING"))
+  (println "TESTING")
+  "RETURN TESTING")
 
 (defn root-view
   []
