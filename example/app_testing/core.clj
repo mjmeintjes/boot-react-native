@@ -144,8 +144,11 @@
                             (fn[]
                               (reload-js)
                               (wait-for-text "HELLO WORLD")
-                              ~@test
-                              (test/is true "")))
+                              (test/is (= true
+                                          (do
+                                            ~@test
+                                            true))
+                                       "")))
          (finally
            (.quit driver#))))))
 
