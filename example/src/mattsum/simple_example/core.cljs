@@ -1,5 +1,6 @@
 (ns mattsum.simple-example.core
-  (:require [reagent.core :as reag :refer [atom]]))
+  (:require [reagent.core :as reag :refer [atom]]
+            [cljs.test :as test]))
 
 #_(enable-console-print!)
 
@@ -27,8 +28,12 @@
   (js/console.log "MAIN")
   (mount-root))
 
+(test/deftest testingt
+  (test/is (= 1 2) "ERROR"))
 
 (defn on-js-reload
   []
+  (enable-console-print!)
+  (test/run-tests)
   (js/console.log "JS RELOADING")
   (mount-root))

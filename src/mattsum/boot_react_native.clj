@@ -5,6 +5,7 @@
              [util :as util]]
             [boot.from.backtick :refer [template]]
             [clojure.java.io :as io]
+            [me.raynes.conch :refer [programs with-programs let-programs] :as sh]
             [mattsum.impl
              [boot-helpers :as bh :refer [exit-code find-file shell]]
              [goog-deps :refer [get-files-to-process setup-links-for-dependency-map]]]))
@@ -157,6 +158,25 @@ require('" boot-main "');
      (link-goog-deps)
      (replace-main)
      ))
+
+(deftask print-android-log
+  "Prints React Native log messages (from adb logcat)"
+  []
+  ;; TODO: support different log levels
+  (let [log-process (atom nil)
+        process-line (fn [line _]
+                       ;; TODO: parse time from line, and only display new logs (time after startup - problem is that time on phone might differ from local time)
+                       ;; TODO: colorize output - see https://github.com/cesarferreira/react-native-logcat/blob/master/lib/react-native-logcat.rb
+                       ;; TODO: Support console.group? - will need support from JS side as well
+                       (println line))]
+    (c/with-pre-wrap fileset
+      (with-programs [adb]
+        (when (nil? @log-process)
+          (reset! log-process
+                  (adb "logcat" "-v" "time" "*:S" "ReactNative:V" "ReactNativeJS:V"
+                       {:out process-line})))
+        )
+      fileset)))
 
 (deftask start-rn-packager
   "Starts the React Native packager. Includes a custom transformer that skips transformation for ClojureScript generated files."

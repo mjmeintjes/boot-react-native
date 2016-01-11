@@ -19,12 +19,6 @@ var SimpleExampleApp = React.createClass({
         <Text style={styles.welcome}>
           Welcome to React Native!
         </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Shake or press menu button for dev menu
-        </Text>
       </View>
     );
   }
@@ -52,28 +46,6 @@ var styles = StyleSheet.create({
 AppRegistry.registerComponent('SimpleExampleApp', () => SimpleExampleApp);
 
 setTimeout(function(){
-    var wrapLog = function(oldLogFuncName) {
-        var oldlog = global.console[oldLogFuncName];
-        global.console[oldLogFuncName] = function() {
-            var args = Array.prototype.slice.call(arguments);
-            fetch('http://matt-dev:8000/' + oldLogFuncName,
-                  {body: JSON.stringify(args),
-                   method: 'post',
-                   headers: {'Accept': 'application/json',
-                             'Content-Type': 'application/json'
-                            }});
-            if (oldlog) {
-                oldlog.apply(console, args);
-            }
-        };
-    };
-
-    wrapLog('log');
-    wrapLog('info');
-    wrapLog('error');
-    wrapLog('debug');
-    wrapLog('warn');
-
     require('./build/main.js');
     mattsum.simple_example.core.main();
 });
