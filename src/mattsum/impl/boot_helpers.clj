@@ -27,7 +27,7 @@
 (defn not-nil
   [msg obj]
   (when (nil? obj)
-    (throw (ex-info msg)))
+    (throw (ex-info msg {})))
   obj)
 
 (defn apply-replacements
