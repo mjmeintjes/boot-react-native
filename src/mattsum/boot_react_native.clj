@@ -164,8 +164,9 @@ require('" boot-main "');
 (deftask after-cljsbuild
   [o output-dir OUT str  "The cljs :output-dir"
    a asset-path PATH str "The (optional) asset-path. Path relative to React Native app where main.js is stored."
-   s server-url SERVE str "The (optional) IP address and port for the websocket server to listen on."]
+   s server-url SERVE str "The (optional) IP address and port for the websocket server to listen on."
+   a app-dir OUT str  "The (relative) path to the React Native application"]
   (comp (react-native-devenv :output-dir output-dir
                           :asset-path asset-path
                           :server-url server-url)
-     (start-rn-packager)))
+     (start-rn-packager :app-dir app-dir)))
