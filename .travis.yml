@@ -1,5 +1,7 @@
 language: generic
-os:
-  - osx
-  - linux
-before_install: ./build.$TRAVIS_OS_NAME.sh
+matrix:
+  include:
+    - os: osx
+      language: objective-c
+    - os: linux
+      language: android
