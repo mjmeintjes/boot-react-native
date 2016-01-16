@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+set -euf -o pipefail
+
+OS=${1:?usage: specify os}
+rm -rf tmp/travis
+mkdir -p tmp/travis
+cp .travis.$OS.yml tmp/travis/.travis.yml
+(cd tmp/travis && travis compile > ../../build.$OS.sh)
+

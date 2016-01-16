@@ -3,3 +3,4 @@ target
 .nrepl-port
 example/out
 .tern-port
+tmp/

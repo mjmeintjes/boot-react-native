@@ -1,0 +1,5 @@
+language: generic
+os:
+  - osx
+  - linux
+before_install: build.$TRAVIS_OS_NAME.sh

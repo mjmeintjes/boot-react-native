@@ -1,0 +1,6 @@
+* Installation 
+gem install travis -v 1.8.2 --no-rdoc --no-ri
+mkdir -p ~/.travis/
+git clone https://github.com/travis-ci/travis-build.git ~/.travis/travis-build
+gem install bundler
+bundle install --gemfile ~/.travis/travis-build/Gemfile
