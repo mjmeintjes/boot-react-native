@@ -12,7 +12,8 @@ before_script:
   - npm install -g npm@3.2
   - npm install
   # install boot
-  - (cd /usr/local/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
+  - export PATH=~/bin:$PATH
+  - (mkdir ~/bin && cd /~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
   - ./gradlew :ReactAndroid:assembleDebug -PdisablePreDex -Pjobs=1
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
