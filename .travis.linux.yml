@@ -14,6 +14,7 @@ before_script:
   - npm install
   # install boot
   - export PATH=~/bin:$PATH
+  - export BOOT_VERSION=2.5.5
   - (mkdir ~/bin && cd ~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
   - ./gradlew assembleDebug -PdisablePreDex -Pjobs=1
   - android-wait-for-emulator
