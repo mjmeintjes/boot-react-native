@@ -354,6 +354,8 @@ travis_fold start before_script.12
   travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
 travis_fold end before_script.12
 
+travis_cmd cd\ ../..\ \&\&\ ls --echo --timing
+travis_result $?
 travis_cmd ./test-reloading.sh --echo --timing
 travis_result $?
 echo -e "\nDone. Your build exited with $TRAVIS_TEST_RESULT."
