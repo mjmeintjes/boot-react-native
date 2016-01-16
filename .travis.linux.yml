@@ -3,10 +3,18 @@ before_script:
   - cd example/app/android
   - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
-  - apt-get install gcc
+  - apt-get install gcc g++
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install 4
   - npm install -g npm@3.2
   - npm install
+  # install boot
+  - (cd /usr/local/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
+  - ./gradlew :ReactAndroid:assembleDebug -PdisablePreDex -Pjobs=1
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
+script:
+    - boot -v
+    - boot -h
+    # run tests on the emulator
+    - ./gradlew :ReactAndroid:connectedAndroidTest -PdisablePreDex --stacktrace --info:
 
