@@ -352,6 +352,10 @@ if [[ -f Podfile ]]; then
   fi
 fi
 
+travis_fold start before_script
+  travis_cmd cd\ example/app/ios --assert --echo --timing
+travis_fold end before_script
+
 if [[ -f Rakefile && "$(cat Rakefile)" =~ require\ [\"\']motion/project && -f Gemfile ]]; then
   travis_cmd bundle\ exec\ rake\ spec --echo --timing
 elif [[ -f Rakefile && "$(cat Rakefile)" =~ require\ [\"\']motion/project ]]; then

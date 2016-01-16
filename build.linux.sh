@@ -305,20 +305,24 @@ travis_cmd java\ -Xmx32m\ -version --echo
 travis_cmd javac\ -J-Xmx32m\ -version --echo
 
 travis_fold start before_script.1
-  travis_cmd echo\ no\ \|\ android\ create\ avd\ --force\ -n\ test\ -t\ android-19\ --abi\ armeabi-v7a --assert --echo --timing
+  travis_cmd cd\ example/app/android --assert --echo --timing
 travis_fold end before_script.1
 
 travis_fold start before_script.2
-  travis_cmd emulator\ -avd\ test\ -no-audio\ -no-window\ \& --assert --echo --timing
+  travis_cmd echo\ no\ \|\ android\ create\ avd\ --force\ -n\ test\ -t\ android-19\ --abi\ armeabi-v7a --assert --echo --timing
 travis_fold end before_script.2
 
 travis_fold start before_script.3
-  travis_cmd android-wait-for-emulator --assert --echo --timing
+  travis_cmd emulator\ -avd\ test\ -no-audio\ -no-window\ \& --assert --echo --timing
 travis_fold end before_script.3
 
 travis_fold start before_script.4
-  travis_cmd adb\ shell\ input\ keyevent\ 82\ \&k --assert --echo --timing
+  travis_cmd android-wait-for-emulator --assert --echo --timing
 travis_fold end before_script.4
+
+travis_fold start before_script.5
+  travis_cmd adb\ shell\ input\ keyevent\ 82\ \&k --assert --echo --timing
+travis_fold end before_script.5
 
 if [[ -f gradlew ]]; then
   travis_cmd ./gradlew\ build\ connectedCheck --echo --timing
