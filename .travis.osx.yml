@@ -1,1 +1,4 @@
 language: objective-c
+before_script:
+  - cd example/app/ios
+
