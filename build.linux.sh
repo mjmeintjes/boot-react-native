@@ -267,6 +267,14 @@ if [[ -f .gitmodules ]]; then
 fi
 
 rm -f ~/.ssh/source_rsa
+
+travis_fold start apt
+  echo -e "\033[33;1mInstalling APT Packages (BETA)\033[0m"
+  travis_cmd export\ DEBIAN_FRONTEND\=noninteractive --echo
+  travis_cmd sudo\ -E\ apt-get\ -yq\ update\ \&\>\>\ \~/apt-get-update.log --echo --timing
+  travis_cmd sudo\ -E\ apt-get\ -yq\ --no-install-suggests\ --no-install-recommends\ --force-yes\ install\ gcc\ g\+\+ --echo --timing
+travis_fold end apt
+
 export PS4=+
 export TRAVIS=true
 export CI=true
@@ -311,7 +319,7 @@ travis_fold start before_script.3
 travis_fold end before_script.3
 
 travis_fold start before_script.4
-  travis_cmd apt-get\ install\ gcc --assert --echo --timing
+  travis_cmd sudo\ apt-get\ -qq\ update --assert --echo --timing
 travis_fold end before_script.4
 
 travis_fold start before_script.5
@@ -327,23 +335,26 @@ travis_fold start before_script.7
 travis_fold end before_script.7
 
 travis_fold start before_script.8
-  travis_cmd android-wait-for-emulator --assert --echo --timing
+  travis_cmd \(cd\ /usr/local/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
 travis_fold end before_script.8
 
 travis_fold start before_script.9
-  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+  travis_cmd ./gradlew\ :ReactAndroid:assembleDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
 travis_fold end before_script.9
 
-if [[ -f gradlew ]]; then
-  travis_cmd ./gradlew\ build\ connectedCheck --echo --timing
-elif [[ -f build.gradle ]]; then
-  travis_cmd gradle\ build\ connectedCheck --echo --timing
-elif [[ -f pom.xml ]]; then
-  travis_cmd mvn\ install\ -B --echo --timing
-else
-  travis_cmd ant\ debug\ install\ test --echo --timing
-fi
+travis_fold start before_script.10
+  travis_cmd android-wait-for-emulator --assert --echo --timing
+travis_fold end before_script.10
 
+travis_fold start before_script.11
+  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+travis_fold end before_script.11
+
+travis_cmd boot\ -v --echo --timing
+travis_result $?
+travis_cmd boot\ -h --echo --timing
+travis_result $?
+travis_cmd \{:\"./gradlew\ :ReactAndroid:connectedAndroidTest\ -PdisablePreDex\ --stacktrace\ --info\"\=\>nil\} --echo --timing
 travis_result $?
 echo -e "\nDone. Your build exited with $TRAVIS_TEST_RESULT."
 

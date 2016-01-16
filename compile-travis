@@ -6,7 +6,8 @@ compile() {
     rm -rf tmp/travis
     mkdir -p tmp/travis
     cp .travis.$OS.yml tmp/travis/.travis.yml
-    (cd tmp/travis && travis compile > ../../build.$OS.sh)
+    
+    (cd tmp/travis && TRAVIS_BUILD_APT_PACKAGE_WHITELIST=https://raw.githubusercontent.com/travis-ci/apt-package-whitelist/master/ubuntu-precise travis compile > ../../build.$OS.sh)
     chmod +x build.$OS.sh
 }
 compile osx
