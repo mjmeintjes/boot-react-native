@@ -10,6 +10,7 @@ before_script:
   - emulator -avd test -no-audio -no-window &
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install 4
   - npm install -g npm@3.2
+  - npm install -g appium
   - npm install
   # install boot
   - export PATH=~/bin:$PATH
@@ -18,8 +19,5 @@ before_script:
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 script:
-    - boot -v
-    - boot -h
-    # run tests on the emulator
-    - ./gradlew connectedAndroidTest -PdisablePreDex --stacktrace --info:
+  - ./test-reloading.sh
 

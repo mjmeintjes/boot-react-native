@@ -1,8 +1,8 @@
 language: generic
 matrix:
   include:
-    - os: osx
-      language: objective-c
+    # - os: osx
+      # language: objective-c
     - os: linux
       language: android
       android:
