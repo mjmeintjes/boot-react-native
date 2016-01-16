@@ -315,7 +315,7 @@ travis_fold start before_script.4
 travis_fold end before_script.4
 
 travis_fold start before_script.5
-  travis_cmd adb\ shell\ input\ keyevent\ 82\ \&k --assert --echo --timing
+  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
 travis_fold end before_script.5
 
 if [[ -f gradlew ]]; then
