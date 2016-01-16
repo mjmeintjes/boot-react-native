@@ -319,36 +319,32 @@ travis_fold start before_script.3
 travis_fold end before_script.3
 
 travis_fold start before_script.4
-  travis_cmd sudo\ apt-get\ -qq\ update --assert --echo --timing
+  travis_cmd rm\ -rf\ \~/.nvm\ \&\&\ git\ clone\ https://github.com/creationix/nvm.git\ \~/.nvm\ \&\&\ \(cd\ \~/.nvm\ \&\&\ git\ checkout\ \`git\ describe\ --abbrev\=0\ --tags\`\)\ \&\&\ source\ \~/.nvm/nvm.sh\ \&\&\ nvm\ install\ 4 --assert --echo --timing
 travis_fold end before_script.4
 
 travis_fold start before_script.5
-  travis_cmd rm\ -rf\ \~/.nvm\ \&\&\ git\ clone\ https://github.com/creationix/nvm.git\ \~/.nvm\ \&\&\ \(cd\ \~/.nvm\ \&\&\ git\ checkout\ \`git\ describe\ --abbrev\=0\ --tags\`\)\ \&\&\ source\ \~/.nvm/nvm.sh\ \&\&\ nvm\ install\ 4 --assert --echo --timing
+  travis_cmd npm\ install\ -g\ npm@3.2 --assert --echo --timing
 travis_fold end before_script.5
 
 travis_fold start before_script.6
-  travis_cmd npm\ install\ -g\ npm@3.2 --assert --echo --timing
+  travis_cmd npm\ install --assert --echo --timing
 travis_fold end before_script.6
 
 travis_fold start before_script.7
-  travis_cmd npm\ install --assert --echo --timing
+  travis_cmd \(cd\ /usr/local/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
 travis_fold end before_script.7
 
 travis_fold start before_script.8
-  travis_cmd \(cd\ /usr/local/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
+  travis_cmd ./gradlew\ :ReactAndroid:assembleDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
 travis_fold end before_script.8
 
 travis_fold start before_script.9
-  travis_cmd ./gradlew\ :ReactAndroid:assembleDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
+  travis_cmd android-wait-for-emulator --assert --echo --timing
 travis_fold end before_script.9
 
 travis_fold start before_script.10
-  travis_cmd android-wait-for-emulator --assert --echo --timing
-travis_fold end before_script.10
-
-travis_fold start before_script.11
   travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
-travis_fold end before_script.11
+travis_fold end before_script.10
 
 travis_cmd boot\ -v --echo --timing
 travis_result $?
