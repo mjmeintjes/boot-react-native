@@ -6,4 +6,4 @@ rm -rf tmp/travis
 mkdir -p tmp/travis
 cp .travis.$OS.yml tmp/travis/.travis.yml
 (cd tmp/travis && travis compile > ../../build.$OS.sh)
-
+chmod +x build.$OS.sh
