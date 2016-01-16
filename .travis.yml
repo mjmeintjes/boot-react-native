@@ -29,18 +29,18 @@ matrix:
             # if you need to run emulator(s) during your tests
             - sys-img-x86-android-17
         # Emulator Management: Create, Start and Wait
-        before_cache:
-            - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-            cache:
-            directories:
-                - $HOME/.gradle/hes/
-                - $HOME/.gradle/wrapper/
-        before_script:
-            - cd example/app/android
-            - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
-            - emulator -avd test -no-audio -no-window &
-            - android-wait-for-emulator
-            - adb shell input keyevent 82 &k
-        script:
-            - ./gradlew connectedAndroidTest
+    before_cache:
+        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+        cache:
+        directories:
+            - $HOME/.gradle/hes/
+            - $HOME/.gradle/wrapper/
+    before_script:
+        - cd example/app/android
+        - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+        - emulator -avd test -no-audio -no-window &
+        - android-wait-for-emulator
+        - adb shell input keyevent 82 &k
+    script:
+        - ./gradlew connectedAndroidTest
 
