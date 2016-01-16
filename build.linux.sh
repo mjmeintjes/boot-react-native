@@ -291,16 +291,10 @@ if [[ -f build.gradle ]]; then
   travis_cmd export\ TERM\=dumb --echo
 fi
 
-travis_fold start android.install
-  echo -e "Installing Android dependencies"
-  travis_cmd android-update-sdk\ --components\=platform-tools --assert --echo --timing
-  travis_cmd android-update-sdk\ --components\=build-tools-19.1.0 --assert --echo --timing
-  travis_cmd android-update-sdk\ --components\=android-19 --assert --echo --timing
-  travis_cmd android-update-sdk\ --components\=extra-android-m2repository --assert --echo --timing
-  travis_cmd android-update-sdk\ --components\=addon-google_apis-google-19 --assert --echo --timing
-  travis_cmd android-update-sdk\ --components\=sys-img-x86-android-17 --assert --echo --timing
-travis_fold end android.install
-
+echo -e "\033[33;1mNo build-tools version is specified in android.components. Consider adding one of:\033[0m"
+travis_cmd android\ list\ sdk\ --extended\ --no-ui\ --all\ \|\ awk\ -F\\\"\ \'/\^id.\*build-tools/\ \{print\ \$2\}\' --assert
+echo -e "\033[33;1mThe following versions are pre-installed:\033[0m"
+travis_cmd for\ v\ in\ \$\(ls\ /usr/local/android-sdk/build-tools/\ \|\ sort\ -r\ 2\>/dev/null\)\;\ do\ echo\ build-tools-\$v\;\ done\;\ echo --assert
 travis_cmd java\ -Xmx32m\ -version --echo
 travis_cmd javac\ -J-Xmx32m\ -version --echo
 
