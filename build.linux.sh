@@ -335,7 +335,7 @@ travis_fold start before_script.7
 travis_fold end before_script.7
 
 travis_fold start before_script.8
-  travis_cmd \(mkdir\ \~/bin\ \&\&\ cd\ /\~/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
+  travis_cmd \(mkdir\ \~/bin\ \&\&\ cd\ \~/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
 travis_fold end before_script.8
 
 travis_fold start before_script.9
