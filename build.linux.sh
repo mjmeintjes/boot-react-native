@@ -298,10 +298,6 @@ travis_cmd for\ v\ in\ \$\(ls\ /usr/local/android-sdk/build-tools/\ \|\ sort\ -r
 travis_cmd java\ -Xmx32m\ -version --echo
 travis_cmd javac\ -J-Xmx32m\ -version --echo
 
-travis_fold start install
-  travis_cmd npm\ install --assert --echo --timing
-travis_fold end install
-
 travis_fold start before_script.1
   travis_cmd cd\ example/app/android --assert --echo --timing
 travis_fold end before_script.1
@@ -315,12 +311,20 @@ travis_fold start before_script.3
 travis_fold end before_script.3
 
 travis_fold start before_script.4
-  travis_cmd android-wait-for-emulator --assert --echo --timing
+  travis_cmd npm\ install\ -g\ npm@3.2 --assert --echo --timing
 travis_fold end before_script.4
 
 travis_fold start before_script.5
-  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+  travis_cmd npm\ install --assert --echo --timing
 travis_fold end before_script.5
+
+travis_fold start before_script.6
+  travis_cmd android-wait-for-emulator --assert --echo --timing
+travis_fold end before_script.6
+
+travis_fold start before_script.7
+  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+travis_fold end before_script.7
 
 if [[ -f gradlew ]]; then
   travis_cmd ./gradlew\ build\ connectedCheck --echo --timing
