@@ -298,6 +298,10 @@ travis_cmd for\ v\ in\ \$\(ls\ /usr/local/android-sdk/build-tools/\ \|\ sort\ -r
 travis_cmd java\ -Xmx32m\ -version --echo
 travis_cmd javac\ -J-Xmx32m\ -version --echo
 
+travis_fold start install
+  travis_cmd npm\ install --assert --echo --timing
+travis_fold end install
+
 travis_fold start before_script.1
   travis_cmd cd\ example/app/android --assert --echo --timing
 travis_fold end before_script.1
