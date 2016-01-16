@@ -16,10 +16,12 @@ before_script:
   - export PATH=~/bin:$PATH
   - export BOOT_VERSION=2.5.5
   - (mkdir ~/bin && cd ~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
-  - ./gradlew assembleDebug -PdisablePreDex -Pjobs=1
+  - boot -v
+  - ./gradlew assembleDebug -PdisablePreDex -Pjobs=1 
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 script:
   - cd ../.. && ls
+  - (cd .. && boot inst)
   - ./test-reloading.sh
 
