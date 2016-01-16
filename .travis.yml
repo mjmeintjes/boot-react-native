@@ -16,14 +16,15 @@ matrix:
             - build-tools-23.0.1
 
             # The SDK version used to compile your project
-            - android-23
+            - android-19
 
             # Additional components
-            # - extra-android-m2repository
+            - extra-android-support
+            - extra-android-m2repository
             # - addon-google_apis-google-19
 
             # Specify at least one system image,
             # if you need to run emulator(s) during your tests
-            - sys-img-x86-android-23
+            - sys-img-x86-android-19
 script: ./build.$TRAVIS_OS_NAME.sh
 
