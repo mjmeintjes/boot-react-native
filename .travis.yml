@@ -3,8 +3,11 @@ matrix:
   include:
     - os: osx
       language: objective-c
+      before_script:
+        - cd example/app/ios
     - os: linux
       language: android
+      sudo: required
       android:
         components:
             # Uncomment the lines below if you want to
@@ -27,6 +30,7 @@ matrix:
             - sys-img-x86-android-17
         # Emulator Management: Create, Start and Wait
         before_script:
+        - cd example/app/android
         - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
         - emulator -avd test -no-audio -no-window &
         - android-wait-for-emulator
