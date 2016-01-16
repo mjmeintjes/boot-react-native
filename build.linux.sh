@@ -339,7 +339,7 @@ travis_fold start before_script.8
 travis_fold end before_script.8
 
 travis_fold start before_script.9
-  travis_cmd ./gradlew\ :ReactAndroid:assembleDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
+  travis_cmd ./gradlew\ assembleDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
 travis_fold end before_script.9
 
 travis_fold start before_script.10
@@ -354,7 +354,7 @@ travis_cmd boot\ -v --echo --timing
 travis_result $?
 travis_cmd boot\ -h --echo --timing
 travis_result $?
-travis_cmd \{:\"./gradlew\ :ReactAndroid:connectedAndroidTest\ -PdisablePreDex\ --stacktrace\ --info\"\=\>nil\} --echo --timing
+travis_cmd \{:\"./gradlew\ connectedAndroidTest\ -PdisablePreDex\ --stacktrace\ --info\"\=\>nil\} --echo --timing
 travis_result $?
 echo -e "\nDone. Your build exited with $TRAVIS_TEST_RESULT."
 

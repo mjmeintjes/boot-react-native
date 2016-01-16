@@ -14,12 +14,12 @@ before_script:
   # install boot
   - export PATH=~/bin:$PATH
   - (mkdir ~/bin && cd ~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
-  - ./gradlew :ReactAndroid:assembleDebug -PdisablePreDex -Pjobs=1
+  - ./gradlew assembleDebug -PdisablePreDex -Pjobs=1
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 script:
     - boot -v
     - boot -h
     # run tests on the emulator
-    - ./gradlew :ReactAndroid:connectedAndroidTest -PdisablePreDex --stacktrace --info:
+    - ./gradlew connectedAndroidTest -PdisablePreDex --stacktrace --info:
 
