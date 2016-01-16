@@ -13,7 +13,7 @@ matrix:
             # - tools
 
             # The BuildTools version used by your project
-            - build-tools-23.0.2
+            - build-tools-23.0.1
 
             # The SDK version used to compile your project
             - android-23
@@ -24,6 +24,6 @@ matrix:
 
             # Specify at least one system image,
             # if you need to run emulator(s) during your tests
-            - sys-img-x86-android-17
+            - sys-img-x86-android-23
 script: ./build.$TRAVIS_OS_NAME.sh
 
