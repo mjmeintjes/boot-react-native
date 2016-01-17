@@ -25,6 +25,6 @@ matrix:
 
             # Specify at least one system image,
             # if you need to run emulator(s) during your tests
-            - sys-img-x86-android-23
+            - sys-img-armeabi-v7a-android-21
 script: ./build.$TRAVIS_OS_NAME.sh
 
