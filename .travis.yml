@@ -20,6 +20,7 @@ matrix:
             - tools
             - build-tools-$ANDROID_BUILD_TOOLS_VERSION
             - android-$ANDROID_API_LEVEL
+            - android-23 #for RN
             - extra-android-support
             - extra-android-m2repository
 

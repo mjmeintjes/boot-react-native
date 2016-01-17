@@ -335,56 +335,60 @@ travis_fold start before_script.7
 travis_fold end before_script.7
 
 travis_fold start before_script.8
-  travis_cmd npm\ config\ set\ progress\ false --assert --echo --timing
+  travis_cmd npm\ config\ set\ progress\=false --assert --echo --timing
 travis_fold end before_script.8
 
 travis_fold start before_script.9
-  travis_cmd npm\ install\ --no-optional --assert --echo --timing
+  travis_cmd npm\ config\ set\ spin\=false --assert --echo --timing
 travis_fold end before_script.9
 
 travis_fold start before_script.10
-  travis_cmd export\ PATH\=\~/bin:\$PATH --assert --echo --timing
+  travis_cmd npm\ install\ --no-optional --assert --echo --timing
 travis_fold end before_script.10
 
 travis_fold start before_script.11
-  travis_cmd export\ BOOT_VERSION\=2.5.5 --assert --echo --timing
+  travis_cmd export\ PATH\=\~/bin:\$PATH --assert --echo --timing
 travis_fold end before_script.11
 
 travis_fold start before_script.12
-  travis_cmd export\ BOOT_JVM_OPTIONS\=\"-Xmx2g\ -client\ -XX:-OmitStackTraceInFastThrow\ -XX:\+TieredCompilation\ -XX:TieredStopAtLevel\=1\ -XX:MaxPermSize\=256m\ -XX:\+UseConcMarkSweepGC\ -XX:\+CMSClassUnloadingEnabled\ -Xverify:none\" --assert --echo --timing
+  travis_cmd export\ BOOT_VERSION\=2.5.5 --assert --echo --timing
 travis_fold end before_script.12
 
 travis_fold start before_script.13
-  travis_cmd \(mkdir\ \~/bin\ \&\&\ cd\ \~/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
+  travis_cmd export\ BOOT_JVM_OPTIONS\=\"-Xmx2g\ -client\ -XX:-OmitStackTraceInFastThrow\ -XX:\+TieredCompilation\ -XX:TieredStopAtLevel\=1\ -XX:MaxPermSize\=256m\ -XX:\+UseConcMarkSweepGC\ -XX:\+CMSClassUnloadingEnabled\ -Xverify:none\" --assert --echo --timing
 travis_fold end before_script.13
 
 travis_fold start before_script.14
-  travis_cmd run-bg\ \"./gradlew\ assembleDebug\ -PdisablePreDex\ -Pjobs\=1\" --assert --echo --timing
+  travis_cmd \(mkdir\ \~/bin\ \&\&\ cd\ \~/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
 travis_fold end before_script.14
 
 travis_fold start before_script.15
-  travis_cmd run-bg\ \"npm\ install\ -g\ appium\ --no-optional\ \" --assert --echo --timing
+  travis_cmd run-bg\ \"./gradlew\ assembleDebug\ -PdisablePreDex\ -Pjobs\=1\" --assert --echo --timing
 travis_fold end before_script.15
 
 travis_fold start before_script.16
-  travis_cmd \(cd\ ../../..\ \&\&\ boot\ inst\ \&\&\ cd\ example\ \&\&\ boot\ fast-build\)\ \& --assert --echo --timing
+  travis_cmd run-bg\ \"npm\ install\ -g\ appium\ --no-optional\ \" --assert --echo --timing
 travis_fold end before_script.16
 
 travis_fold start before_script.17
-  travis_cmd run-with-timeout\ 600\ wait-for-bg --assert --echo --timing
+  travis_cmd \(cd\ ../../..\ \&\&\ boot\ inst\ \&\&\ cd\ example\ \&\&\ boot\ fast-build\)\ \& --assert --echo --timing
 travis_fold end before_script.17
 
 travis_fold start before_script.18
-  travis_cmd run-with-timeout\ 600\ wait-for-avd --assert --echo --timing
+  travis_cmd run-with-timeout\ 600\ wait-for-bg --assert --echo --timing
 travis_fold end before_script.18
 
 travis_fold start before_script.19
-  travis_cmd ./gradlew\ installDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
+  travis_cmd run-with-timeout\ 600\ wait-for-avd --assert --echo --timing
 travis_fold end before_script.19
 
 travis_fold start before_script.20
-  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+  travis_cmd ./gradlew\ installDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
 travis_fold end before_script.20
+
+travis_fold start before_script.21
+  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+travis_fold end before_script.21
 
 travis_cmd cd\ ../..\ \&\&\ ls --echo --timing
 travis_result $?
