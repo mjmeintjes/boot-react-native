@@ -363,8 +363,12 @@ travis_fold start before_script.14
 travis_fold end before_script.14
 
 travis_fold start before_script.15
-  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+  travis_cmd ./gradlew\ installDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
 travis_fold end before_script.15
+
+travis_fold start before_script.16
+  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+travis_fold end before_script.16
 
 travis_cmd cd\ ../..\ \&\&\ ls --echo --timing
 travis_result $?
