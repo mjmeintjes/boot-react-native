@@ -311,39 +311,39 @@ travis_fold start before_script.1
 travis_fold end before_script.1
 
 travis_fold start before_script.2
-  travis_cmd cd\ example/app/android --assert --echo --timing
+  travis_cmd rm\ -rf\ \~/background\ \&\&\ mkdir\ \~/background --assert --echo --timing
 travis_fold end before_script.2
 
 travis_fold start before_script.3
-  travis_cmd echo\ no\ \|\ android\ create\ avd\ --force\ -n\ test\ -t\ android-19\ --abi\ armeabi-v7a --assert --echo --timing
+  travis_cmd cd\ example/app/android --assert --echo --timing
 travis_fold end before_script.3
 
 travis_fold start before_script.4
-  travis_cmd emulator\ -avd\ test\ -no-audio\ -no-window\ \& --assert --echo --timing
+  travis_cmd echo\ no\ \|\ android\ create\ avd\ --force\ -n\ test\ -t\ android-23\ --abi\ armeabi-v7a --assert --echo --timing
 travis_fold end before_script.4
 
 travis_fold start before_script.5
-  travis_cmd rm\ -rf\ \~/.nvm\ \&\&\ git\ clone\ https://github.com/creationix/nvm.git\ \~/.nvm\ \&\&\ \(cd\ \~/.nvm\ \&\&\ git\ checkout\ \`git\ describe\ --abbrev\=0\ --tags\`\)\ \&\&\ source\ \~/.nvm/nvm.sh\ \&\&\ nvm\ install\ 4 --assert --echo --timing
+  travis_cmd emulator\ -avd\ test\ -no-audio\ -no-window\ \& --assert --echo --timing
 travis_fold end before_script.5
 
 travis_fold start before_script.6
-  travis_cmd npm\ install --assert --echo --timing
+  travis_cmd rm\ -rf\ \~/.nvm\ \&\&\ git\ clone\ https://github.com/creationix/nvm.git\ \~/.nvm\ \&\&\ \(cd\ \~/.nvm\ \&\&\ git\ checkout\ \`git\ describe\ --abbrev\=0\ --tags\`\)\ \&\&\ source\ \~/.nvm/nvm.sh\ \&\&\ nvm\ install\ 4 --assert --echo --timing
 travis_fold end before_script.6
 
 travis_fold start before_script.7
-  travis_cmd export\ PATH\=\~/bin:\$PATH --assert --echo --timing
+  travis_cmd npm\ install\ --no-progress --assert --echo --timing
 travis_fold end before_script.7
 
 travis_fold start before_script.8
-  travis_cmd export\ BOOT_VERSION\=2.5.5 --assert --echo --timing
+  travis_cmd export\ PATH\=\~/bin:\$PATH --assert --echo --timing
 travis_fold end before_script.8
 
 travis_fold start before_script.9
-  travis_cmd export\ BOOT_JVM_OPTIONS\=\"-Xmx2g\ -client\ -XX:-OmitStackTraceInFastThrow\ -XX:\+TieredCompilation\ -XX:TieredStopAtLevel\=1\ -XX:MaxPermSize\=256m\ -XX:\+UseConcMarkSweepGC\ -XX:\+CMSClassUnloadingEnabled\ -Xverify:none\" --assert --echo --timing
+  travis_cmd export\ BOOT_VERSION\=2.5.5 --assert --echo --timing
 travis_fold end before_script.9
 
 travis_fold start before_script.10
-  travis_cmd rm\ -rf\ \~/background\ \&\&\ mkdir\ \~/background --assert --echo --timing
+  travis_cmd export\ BOOT_JVM_OPTIONS\=\"-Xmx2g\ -client\ -XX:-OmitStackTraceInFastThrow\ -XX:\+TieredCompilation\ -XX:TieredStopAtLevel\=1\ -XX:MaxPermSize\=256m\ -XX:\+UseConcMarkSweepGC\ -XX:\+CMSClassUnloadingEnabled\ -Xverify:none\" --assert --echo --timing
 travis_fold end before_script.10
 
 travis_fold start before_script.11
@@ -355,7 +355,7 @@ travis_fold start before_script.12
 travis_fold end before_script.12
 
 travis_fold start before_script.13
-  travis_cmd run-bg\ \"npm\ install\ -g\ appium\" --assert --echo --timing
+  travis_cmd run-bg\ \"npm\ install\ -g\ appium\ --no-optional\ --no-progress\" --assert --echo --timing
 travis_fold end before_script.13
 
 travis_fold start before_script.14

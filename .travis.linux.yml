@@ -6,20 +6,20 @@ addons:
       - g++
 before_script:
   - . ./shell-helpers.sh
+  - rm -rf ~/background && mkdir ~/background
   - cd example/app/android
-  - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-23 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install 4
-  - npm install
+  - npm install --no-progress
   # install boot
   - export PATH=~/bin:$PATH
   - export BOOT_VERSION=2.5.5
   - export BOOT_JVM_OPTIONS="-Xmx2g -client -XX:-OmitStackTraceInFastThrow -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:MaxPermSize=256m -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xverify:none"
 
-  - rm -rf ~/background && mkdir ~/background
   - (mkdir ~/bin && cd ~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
   - run-bg "./gradlew assembleDebug -PdisablePreDex -Pjobs=1"
-  - run-bg "npm install -g appium"
+  - run-bg "npm install -g appium --no-optional --no-progress"
   - (cd ../../.. && boot inst && cd example && boot fast-build) &
   - run-with-timeout 600 wait-for-bg
   - run-with-timeout 600 wait-for-avd
