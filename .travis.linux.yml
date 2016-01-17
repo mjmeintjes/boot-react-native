@@ -5,6 +5,7 @@ addons:
       - gcc
       - g++
 before_script:
+  - . ./shell-helpers.sh
   - cd example/app/android
   - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
@@ -17,14 +18,16 @@ before_script:
   - export BOOT_VERSION=2.5.5
   - export BOOT_JVM_OPTIONS="-Xmx2g -client -XX:-OmitStackTraceInFastThrow -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:MaxPermSize=256m -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xverify:none"
 
+  - rm -rf ~/background && mkdir ~/background
   - (mkdir ~/bin && cd ~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
-  - boot -v
-  - ./gradlew assembleDebug -PdisablePreDex -Pjobs=1 
+  - run-bg "boot -v"
+  - run-bg "./gradlew assembleDebug -PdisablePreDex -Pjobs=1"
+  - run-bg "cd ../../.. && boot inst"
   - android-wait-for-emulator
-  - ./gradlew installDebug -PdisablePreDex -Pjobs=1 
+  - wait-for-bg
+  - run-bg "./gradlew installDebug -PdisablePreDex -Pjobs=1"
   - adb shell input keyevent 82 &
 script:
   - cd ../.. && ls
-  - (cd .. && boot inst)
   - timeout 600 ./test-reloading.sh
 
