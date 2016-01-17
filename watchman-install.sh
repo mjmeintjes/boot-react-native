@@ -6,4 +6,4 @@ git checkout v4.1.0  # the latest stable release
 ./autogen.sh
 ./configure
 make
-ln -s `pwd`/watchman ~/tmp/watchman
+ln -s `pwd`/watchman ~/bin/watchman
