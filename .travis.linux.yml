@@ -10,7 +10,6 @@ before_script:
   - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install 4
-  - npm install -g appium
   - npm install
   # install boot
   - export PATH=~/bin:$PATH
@@ -19,15 +18,16 @@ before_script:
 
   - rm -rf ~/background && mkdir ~/background
   - (mkdir ~/bin && cd ~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
-  - appium &
   - run-bg "./gradlew assembleDebug -PdisablePreDex -Pjobs=1"
+  - run-bg "npm install -g appium"
   - (cd ../../.. && boot inst && cd example && boot fast-build) &
   - run-with-timeout 600 wait-for-bg
-  - android-wait-for-emulator
+  - run-with-timeout 600 wait-for-avd
   - ./gradlew installDebug -PdisablePreDex -Pjobs=1
   - adb shell input keyevent 82 &
 script:
   - cd ../.. && ls
+  - appium &
   - run-with-timeout 600 wait-for-url "http://localhost:8081/index.android.bundle?platform=android"
   - boot rn/print-android-log wait &
   - ./integration-tests.boot
