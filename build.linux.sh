@@ -383,7 +383,7 @@ travis_fold start before_script.19
 travis_fold end before_script.19
 
 travis_fold start before_script.20
-  travis_cmd ./gradlew\ installDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
+  travis_cmd adb\ install\ app/android/app/build/outputs/apk/app-debug.apk --assert --echo --timing
 travis_fold end before_script.20
 
 travis_fold start before_script.21

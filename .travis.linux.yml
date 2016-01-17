@@ -26,7 +26,8 @@ before_script:
   - (cd ../../.. && boot inst && cd example && boot fast-build) &
   - run-with-timeout 600 wait-for-bg
   - run-with-timeout 600 wait-for-avd
-  - ./gradlew installDebug -PdisablePreDex -Pjobs=1
+  #using installDebug leads to timeout on Travis - see http://stackoverflow.com/questions/32952413/gradle-commands-fail-on-api-23-google-api-emulator-image-armeabi-v7a
+  - adb install app/android/app/build/outputs/apk/app-debug.apk
   - adb shell input keyevent 82 &
 script:
   - cd ../.. && ls
