@@ -16,9 +16,9 @@ run-with-timeout () {
     )
 }
 
-wait-for-avd {
+wait-for-avd() {
     local bootanim=""
-    export PATH=$(dirname $(dirname $(which android)))/platform-tools:$PATH
+    PATH=$(dirname $(dirname $(which android)))/platform-tools:$PATH
     until [[ "$bootanim" =~ "stopped" ]]; do
         sleep 5
         bootanim=$(adb -e shell getprop init.svc.bootanim 2>&1)
