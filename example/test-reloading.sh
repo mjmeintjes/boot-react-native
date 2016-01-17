@@ -22,6 +22,10 @@ wait-for-url() {
 }
 echo "Running integration tests"
 echo "Please ensure that Android device is connected to adb, otherwise these tests won't work."
+adb reverse tcp:8001 tcp:8001 # packager
+adb reverse tcp:8079 tcp:8079 # reloading
+adb reverse tcp:9001 tcp:9001 # repl
+
 boot fast-build & #2>&1 1>/dev/null &
 appium & #2>&1 1>/dev/null &
 echo "Waiting for boot to start up"

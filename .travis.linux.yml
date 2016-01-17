@@ -25,16 +25,20 @@ before_script:
   - (mkdir ~/bin && cd ~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
   - run-bg "./gradlew assembleDebug -PdisablePreDex -Pjobs=1"
   - run-bg "npm install -g appium --no-optional "
-  - (cd ../../.. && boot inst && ./watchman-install.sh && cd example && boot fast-build) &
+  - (cd ../../.. && boot inst && ./watchman-install.sh && cd example && boot fast-build rn/print-android-log) &
   - run-with-timeout 600 wait-for-bg
   - run-with-timeout 600 wait-for-avd
+  - adb devices -l
   #using installDebug leads to timeout on Travis - see http://stackoverflow.com/questions/32952413/gradle-commands-fail-on-api-23-google-api-emulator-image-armeabi-v7a
   - adb install app/build/outputs/apk/app-debug.apk
   - adb shell input keyevent 82 &
 script:
   - cd ../.. && ls
   - appium &
+  - adb reverse tcp:8001 tcp:8001 # packager
+  - adb reverse tcp:8079 tcp:8079 # reloading
+  - adb reverse tcp:9001 tcp:9001 # repl
+
   - run-with-timeout 600 wait-for-url "http://localhost:8081/index.android.bundle?platform=android"
-  - boot watch rn/print-android-log &
   - ./integration-tests.boot
 

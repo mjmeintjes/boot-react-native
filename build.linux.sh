@@ -371,7 +371,7 @@ travis_fold start before_script.16
 travis_fold end before_script.16
 
 travis_fold start before_script.17
-  travis_cmd \(cd\ ../../..\ \&\&\ boot\ inst\ \&\&\ ./watchman-install.sh\ \&\&\ cd\ example\ \&\&\ boot\ fast-build\)\ \& --assert --echo --timing
+  travis_cmd \(cd\ ../../..\ \&\&\ boot\ inst\ \&\&\ ./watchman-install.sh\ \&\&\ cd\ example\ \&\&\ boot\ fast-build\ rn/print-android-log\)\ \& --assert --echo --timing
 travis_fold end before_script.17
 
 travis_fold start before_script.18
@@ -383,20 +383,28 @@ travis_fold start before_script.19
 travis_fold end before_script.19
 
 travis_fold start before_script.20
-  travis_cmd adb\ install\ app/build/outputs/apk/app-debug.apk --assert --echo --timing
+  travis_cmd adb\ devices\ -l --assert --echo --timing
 travis_fold end before_script.20
 
 travis_fold start before_script.21
-  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+  travis_cmd adb\ install\ app/build/outputs/apk/app-debug.apk --assert --echo --timing
 travis_fold end before_script.21
+
+travis_fold start before_script.22
+  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+travis_fold end before_script.22
 
 travis_cmd cd\ ../..\ \&\&\ ls --echo --timing
 travis_result $?
 travis_cmd appium\ \& --echo --timing
 travis_result $?
-travis_cmd run-with-timeout\ 600\ wait-for-url\ \"http://localhost:8081/index.android.bundle\?platform\=android\" --echo --timing
+travis_cmd adb\ reverse\ tcp:8001\ tcp:8001 --echo --timing
 travis_result $?
-travis_cmd boot\ watch\ rn/print-android-log\ \& --echo --timing
+travis_cmd adb\ reverse\ tcp:8079\ tcp:8079 --echo --timing
+travis_result $?
+travis_cmd adb\ reverse\ tcp:9001\ tcp:9001 --echo --timing
+travis_result $?
+travis_cmd run-with-timeout\ 600\ wait-for-url\ \"http://localhost:8081/index.android.bundle\?platform\=android\" --echo --timing
 travis_result $?
 travis_cmd ./integration-tests.boot --echo --timing
 travis_result $?
