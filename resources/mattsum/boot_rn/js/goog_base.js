@@ -3,6 +3,10 @@
 if (typeof global !== 'undefined') {
     global.goog = goog; //Set's up the goog object in global namespace, because React Native runs everything in it's own function, and doesn't expose variables declared by default.
 
+    if (goog.LOCALE === undefined) {
+        goog.LOCALE = "en";
+    }
+
     //TODO: this should probably not be in here
     //React Native throws error because it does not support group logging
     console.groupCollapsed = console.groupCollapsed || console.log;
