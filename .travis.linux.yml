@@ -35,6 +35,6 @@ script:
   - cd ../.. && ls
   - appium &
   - run-with-timeout 600 wait-for-url "http://localhost:8081/index.android.bundle?platform=android"
-  - boot rn/print-android-log wait &
+  - boot watch rn/print-android-log &
   - ./integration-tests.boot
 

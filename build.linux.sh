@@ -396,7 +396,7 @@ travis_cmd appium\ \& --echo --timing
 travis_result $?
 travis_cmd run-with-timeout\ 600\ wait-for-url\ \"http://localhost:8081/index.android.bundle\?platform\=android\" --echo --timing
 travis_result $?
-travis_cmd boot\ rn/print-android-log\ wait\ \& --echo --timing
+travis_cmd boot\ watch\ rn/print-android-log\ \& --echo --timing
 travis_result $?
 travis_cmd ./integration-tests.boot --echo --timing
 travis_result $?
