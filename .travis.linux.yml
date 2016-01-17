@@ -20,14 +20,16 @@ before_script:
 
   - rm -rf ~/background && mkdir ~/background
   - (mkdir ~/bin && cd ~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
+  - appium &
   - run-bg "boot -v"
   - run-bg "./gradlew assembleDebug -PdisablePreDex -Pjobs=1"
-  - run-bg "cd ../../.. && boot inst"
+  - (cd ../../.. && boot inst && cd example && boot fast-build) &
+  - run-with-timeout 600 wait-for-bg
   - android-wait-for-emulator
-  - wait-for-bg
   - ./gradlew installDebug -PdisablePreDex -Pjobs=1
   - adb shell input keyevent 82 &
 script:
   - cd ../.. && ls
-  - timeout 600 ./test-reloading.sh
+  - run-with-timeout 600 wait-for-url "http://localhost:8081/index.android.bundle?platform=android"
+  - ./integration-tests.boot
 
