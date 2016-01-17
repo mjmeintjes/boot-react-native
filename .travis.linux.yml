@@ -25,7 +25,7 @@ before_script:
   - run-bg "cd ../../.. && boot inst"
   - android-wait-for-emulator
   - wait-for-bg
-  - run-bg "./gradlew installDebug -PdisablePreDex -Pjobs=1"
+  - ./gradlew installDebug -PdisablePreDex -Pjobs=1
   - adb shell input keyevent 82 &
 script:
   - cd ../.. && ls
