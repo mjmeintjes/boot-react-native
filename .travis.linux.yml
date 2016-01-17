@@ -15,6 +15,8 @@ before_script:
   # install boot
   - export PATH=~/bin:$PATH
   - export BOOT_VERSION=2.5.5
+  - export BOOT_JVM_OPTIONS="-Xmx2g -client -XX:-OmitStackTraceInFastThrow -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:MaxPermSize=256m -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xverify:none"
+
   - (mkdir ~/bin && cd ~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
   - boot -v
   - ./gradlew assembleDebug -PdisablePreDex -Pjobs=1 
@@ -23,5 +25,5 @@ before_script:
 script:
   - cd ../.. && ls
   - (cd .. && boot inst)
-  - ./test-reloading.sh
+  - timeout 600 ./test-reloading.sh
 

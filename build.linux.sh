@@ -343,30 +343,34 @@ travis_fold start before_script.9
 travis_fold end before_script.9
 
 travis_fold start before_script.10
-  travis_cmd \(mkdir\ \~/bin\ \&\&\ cd\ \~/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
+  travis_cmd export\ BOOT_JVM_OPTIONS\=\"-Xmx2g\ -client\ -XX:-OmitStackTraceInFastThrow\ -XX:\+TieredCompilation\ -XX:TieredStopAtLevel\=1\ -XX:MaxPermSize\=256m\ -XX:\+UseConcMarkSweepGC\ -XX:\+CMSClassUnloadingEnabled\ -Xverify:none\" --assert --echo --timing
 travis_fold end before_script.10
 
 travis_fold start before_script.11
-  travis_cmd boot\ -v --assert --echo --timing
+  travis_cmd \(mkdir\ \~/bin\ \&\&\ cd\ \~/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
 travis_fold end before_script.11
 
 travis_fold start before_script.12
-  travis_cmd ./gradlew\ assembleDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
+  travis_cmd boot\ -v --assert --echo --timing
 travis_fold end before_script.12
 
 travis_fold start before_script.13
-  travis_cmd android-wait-for-emulator --assert --echo --timing
+  travis_cmd ./gradlew\ assembleDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
 travis_fold end before_script.13
 
 travis_fold start before_script.14
-  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+  travis_cmd android-wait-for-emulator --assert --echo --timing
 travis_fold end before_script.14
+
+travis_fold start before_script.15
+  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+travis_fold end before_script.15
 
 travis_cmd cd\ ../..\ \&\&\ ls --echo --timing
 travis_result $?
 travis_cmd \(cd\ ..\ \&\&\ boot\ inst\) --echo --timing
 travis_result $?
-travis_cmd ./test-reloading.sh --echo --timing
+travis_cmd timeout\ 600\ ./test-reloading.sh --echo --timing
 travis_result $?
 echo -e "\nDone. Your build exited with $TRAVIS_TEST_RESULT."
 
