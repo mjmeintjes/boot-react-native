@@ -363,34 +363,32 @@ travis_fold start before_script.14
 travis_fold end before_script.14
 
 travis_fold start before_script.15
-  travis_cmd run-bg\ \"boot\ -v\" --assert --echo --timing
+  travis_cmd run-bg\ \"./gradlew\ assembleDebug\ -PdisablePreDex\ -Pjobs\=1\" --assert --echo --timing
 travis_fold end before_script.15
 
 travis_fold start before_script.16
-  travis_cmd run-bg\ \"./gradlew\ assembleDebug\ -PdisablePreDex\ -Pjobs\=1\" --assert --echo --timing
+  travis_cmd \(cd\ ../../..\ \&\&\ boot\ inst\ \&\&\ cd\ example\ \&\&\ boot\ fast-build\)\ \& --assert --echo --timing
 travis_fold end before_script.16
 
 travis_fold start before_script.17
-  travis_cmd \(cd\ ../../..\ \&\&\ boot\ inst\ \&\&\ cd\ example\ \&\&\ boot\ fast-build\)\ \& --assert --echo --timing
+  travis_cmd run-with-timeout\ 600\ wait-for-bg --assert --echo --timing
 travis_fold end before_script.17
 
 travis_fold start before_script.18
-  travis_cmd run-with-timeout\ 600\ wait-for-bg --assert --echo --timing
+  travis_cmd android-wait-for-emulator --assert --echo --timing
 travis_fold end before_script.18
 
 travis_fold start before_script.19
-  travis_cmd android-wait-for-emulator --assert --echo --timing
+  travis_cmd ./gradlew\ installDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
 travis_fold end before_script.19
 
 travis_fold start before_script.20
-  travis_cmd ./gradlew\ installDebug\ -PdisablePreDex\ -Pjobs\=1 --assert --echo --timing
+  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
 travis_fold end before_script.20
 
-travis_fold start before_script.21
-  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
-travis_fold end before_script.21
-
 travis_cmd cd\ ../..\ \&\&\ ls --echo --timing
+travis_result $?
+travis_cmd boot\ rn/print-android-log\ wait\ \& --echo --timing
 travis_result $?
 travis_cmd run-with-timeout\ 600\ wait-for-url\ \"http://localhost:8081/index.android.bundle\?platform\=android\" --echo --timing
 travis_result $?
