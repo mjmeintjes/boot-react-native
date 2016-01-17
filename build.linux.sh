@@ -272,7 +272,7 @@ travis_fold start apt
   echo -e "\033[33;1mInstalling APT Packages (BETA)\033[0m"
   travis_cmd export\ DEBIAN_FRONTEND\=noninteractive --echo
   travis_cmd sudo\ -E\ apt-get\ -yq\ update\ \&\>\>\ \~/apt-get-update.log --echo --timing
-  travis_cmd sudo\ -E\ apt-get\ -yq\ --no-install-suggests\ --no-install-recommends\ --force-yes\ install\ gcc\ g\+\+ --echo --timing
+  travis_cmd sudo\ -E\ apt-get\ -yq\ --no-install-suggests\ --no-install-recommends\ --force-yes\ install\ gcc\ g\+\+\ automake\ autoconf --echo --timing
 travis_fold end apt
 
 export PS4=+
@@ -371,7 +371,7 @@ travis_fold start before_script.16
 travis_fold end before_script.16
 
 travis_fold start before_script.17
-  travis_cmd \(cd\ ../../..\ \&\&\ boot\ inst\ \&\&\ cd\ example\ \&\&\ boot\ fast-build\)\ \& --assert --echo --timing
+  travis_cmd \(cd\ ../../..\ \&\&\ boot\ inst\ \&\&\ ./watchman-install.sh\ \&\&\ cd\ example\ \&\&\ boot\ fast-build\)\ \& --assert --echo --timing
 travis_fold end before_script.17
 
 travis_fold start before_script.18

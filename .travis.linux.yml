@@ -4,6 +4,8 @@ addons:
     packages:
       - gcc
       - g++
+      - automake #watchman
+      - autoconf #watchman
 before_script:
   - export TERM=dumb
   - . ./shell-helpers.sh
@@ -23,7 +25,7 @@ before_script:
   - (mkdir ~/bin && cd ~/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot)
   - run-bg "./gradlew assembleDebug -PdisablePreDex -Pjobs=1"
   - run-bg "npm install -g appium --no-optional "
-  - (cd ../../.. && boot inst && cd example && boot fast-build) &
+  - (cd ../../.. && boot inst && ./watchman-install.sh && cd example && boot fast-build) &
   - run-with-timeout 600 wait-for-bg
   - run-with-timeout 600 wait-for-avd
   #using installDebug leads to timeout on Travis - see http://stackoverflow.com/questions/32952413/gradle-commands-fail-on-api-23-google-api-emulator-image-armeabi-v7a
