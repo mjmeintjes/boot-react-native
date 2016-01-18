@@ -8,6 +8,7 @@
    io.appium.java_client.remote.MobileCapabilityType
    org.openqa.selenium.remote.DesiredCapabilities)
   (:require  [app-testing.appium :as app]
+             [app-testing.utils :refer [ppxml]]
              [clojure.tools.nrepl :as repl]
              [clojure.test :as t]
              [clojure.pprint :refer [pprint]]))
@@ -65,6 +66,10 @@
 (defn wait-for-text
   [text]
   (wait-for #(first (find-elements-by-text text)) text))
+
+(defn get-page-source
+  []
+  (ppxml (app/run get-page-source)))
 
 (defn reload-js []
   (app/run press-key-code 82 (Integer. 1))
@@ -142,10 +147,11 @@
        (try
          (app/run-on-device false driver#
                             (fn[]
-                              (reload-js)
-                              (wait-for-text "HELLO WORLD")
                               (test/is (= true
                                           (do
+                                            (reload-js)
+                                            (wait-for-text "HELLO WORLD")
+
                                             ~@test
                                             true))
                                        "")))

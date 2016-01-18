@@ -8,6 +8,7 @@
                           [io.appium/java-client "3.2.0"]])
 
 
+(load-file "app_testing/utils.clj")
 (load-file "app_testing/appium.clj")
 (load-file "app_testing/core.clj")
 (require '[clojure.test :refer [deftest is run-all-tests testing] :as test]
@@ -22,6 +23,7 @@
 (deftest repl-commands
   (testing-on-device
    "App should respond to repl commands"
+   #_(debug-repl)
    (run-in-app-repl
     (require '[mattsum.simple-example.core :as core :refer [view text]]
              '[reagent.core :as reag])
