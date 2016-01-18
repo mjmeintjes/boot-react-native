@@ -30,20 +30,19 @@
  )
 
 (deftask fast-build []
-  (comp (serve :handler 'mattsum.simple-log-server/log
-            :port 8000)
-     (watch)
+  (comp (watch)
      (reload :on-jsload 'mattsum.simple-example.core/on-js-reload
              :port 8079
-             :ws-host "matt-dev"
+             :ws-host "localhost"
              )
      (rn/before-cljsbuild)
 
-     (cljs-repl :ws-host "matt-dev"
+     (cljs-repl :ws-host "localhost"
+                :port 9001
                 :ip "0.0.0.0")
 
      (cljs :main "mattsum.simple-example.core")
-     (rn/after-cljsbuild :server-url "matt-dev:8081")
+     (rn/after-cljsbuild :server-url "localhost:8081")
      (target :dir ["app/build"])
      ))
 
