@@ -323,7 +323,7 @@ travis_fold start before_script.4
 travis_fold end before_script.4
 
 travis_fold start before_script.5
-  travis_cmd echo\ no\ \|\ android\ create\ avd\ --force\ -n\ test\ -t\ android-21\ --abi\ armeabi-v7a --assert --echo --timing
+  travis_cmd echo\ no\ \|\ android\ create\ avd\ --force\ -n\ test\ -t\ android-22\ --abi\ armeabi-v7a --assert --echo --timing
 travis_fold end before_script.5
 
 travis_fold start before_script.6

@@ -22,16 +22,19 @@
       (.setCapability "appPackage" "com.simpleexampleapp")
       (.setCapability MobileCapabilityType/APP_ACTIVITY ".MainActivity")
       (.setCapability "noReset" false)
+      (.setCapability "deviceReadyTimeout" 60)
       (.setCapability "newCommandTimeout" 6000))
 
+    (println "Starting AndroidDriver")
     (let [driver  (AndroidDriver. (URL. "http://127.0.0.1:4723/wd/hub") cap)]
       (.addShutdownHook (Runtime/getRuntime) (Thread. (fn[] (when driver
                                                              #_(println "Closing AndroidDriver")
                                                              (.quit driver)))))
+      (println "Started Android Driver")
       driver)))
 
 (defn wait-for
-  ([pred msg] (wait-for pred msg 15))
+  ([pred msg] (wait-for pred msg 180))
   ([pred msg timeout-seconds]
    (let [wait-time 2000
          timeout (* timeout-seconds 1000)]
@@ -108,7 +111,7 @@
    ["Success"]
    #(eval-repl-command sess "(clj->js \"Success\")")
    "Cljs Repl Startup"
-   15))
+   180))
 
 (defn start-cljs-repl
   ([] (start-cljs-repl nil))

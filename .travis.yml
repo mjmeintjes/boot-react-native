@@ -1,7 +1,8 @@
 language: generic
 env:
   global:
-    - ANDROID_API_LEVEL=21
+    - ANDROID_API_LEVEL=23
+    - ANDROID_RUN_LEVEL=22
     - ANDROID_BUILD_TOOLS_VERSION=23.0.1
     - ANDROID_ABI=armeabi-v7a
     - ADB_INSTALL_TIMEOUT=8 # minutes (2 minutes by default)
@@ -20,9 +21,9 @@ matrix:
             - tools
             - build-tools-$ANDROID_BUILD_TOOLS_VERSION
             - android-$ANDROID_API_LEVEL
-            - android-23 #for RN
             - extra-android-support
             - extra-android-m2repository
+            - sys-img-armeabi-v7a-android-$ANDROID_RUN_LEVEL
 
 script: ./build.$TRAVIS_OS_NAME.sh
 

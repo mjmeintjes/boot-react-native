@@ -28,7 +28,7 @@
   (let [command-name (cm/->camelCase (str command))]
     `(do (println)
          (println)
-         (println "Running " ~command-name)
+         (println "Running " ~command-name " : " ~@args)
          (println "DEBUG - current app state:"
                   (ppxml (. ^AppiumDriver *appium-driver* getPageSource)))
          (. ^AppiumDriver *appium-driver* ~(symbol command-name) ~@args))))
