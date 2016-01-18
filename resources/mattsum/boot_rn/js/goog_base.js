@@ -2,6 +2,10 @@
  */
 if (typeof global !== 'undefined') {
 
+    if (goog.LOCALE === undefined) {
+        goog.LOCALE = "en";
+    }
+
     //TODO: this should probably not be in here
     //React Native throws error because it does not support group logging
     console.groupCollapsed = console.groupCollapsed || console.log;
