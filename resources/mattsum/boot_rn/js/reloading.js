@@ -68,6 +68,13 @@
         if(typeof success !== 'function') { success = function(){}; }
         if(typeof error !== 'function') { error = function(){}; }
 
+        if (!src.startsWith("/")) {
+            src = "/" + src; 
+        }
+        if (src.startsWith("/goog")){
+            //TODO: this should probably not be hardcoded to main.out
+            src = "/main.out" + src;
+        }
         var jsUrl = config.basePath + src;
         console.log('(Reload Bridge) Importing: ' + jsUrl);
 

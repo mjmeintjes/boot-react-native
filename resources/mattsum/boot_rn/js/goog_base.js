@@ -1,7 +1,6 @@
 /* Overrides how Google Closure's provide and require functions work, in order for them to work with React Native's packager.
  */
 if (typeof global !== 'undefined') {
-    global.goog = goog; //Set's up the goog object in global namespace, because React Native runs everything in it's own function, and doesn't expose variables declared by default.
 
     if (goog.LOCALE === undefined) {
         goog.LOCALE = "en";
@@ -30,12 +29,28 @@ if (typeof global !== 'undefined') {
         goog.exportPath_(name);
     };
     //Replace goog.require with react-native's implementation, skip errors, because there are going to be some (e.g. missing 'soft' depedencies) and we don't care about them
+    var orig_require = goog.require;
     goog.require = function(name) {
+        var oldErrorReporter = global.ErrorUtils.reportFatalError;
+        //disable React error checking while we try to require
+        //because we want to be able to try goog.require as well
+        global.ErrorUtils.reportFatalError = function(e) { throw new Exception(e);};
         try {
             require(name);
         } catch (e) {
-            console.warn("Error while loading " + name);
-            console.error(e);
+            //Try default goog.require behaviour
+            var oldDebugLoader = goog.ENABLE_DEBUG_LOADER;
+            goog.ENABLE_DEBUG_LOADER = true;
+            try {
+                orig_require.call(goog, name);
+            } catch (e) {
+                console.warn("Error while loading " + name);
+                console.error(e);
+            } finally {
+                goog.ENABLE_DEBUG_LOADER = oldDebugLoader;
+            }
+        } finally {
+            global.ErrorUtils.reportFatalError = oldErrorReporter; 
         }
     };
 }

@@ -40,6 +40,7 @@
   the new fileset"
   ([fileset path modify-fn] (modify-file fileset path modify-fn {}))
   ([fileset path modify-fn replacements]
+   (println "Modifying " path " using " modify-fn)
    (let [tmp (c/tmp-dir!)
          out-file (make-absolute tmp path)]
      (let [base-file (->> path
@@ -63,12 +64,16 @@
   [fileset path content replacements]
   (modify-file fileset path #(str % "\n" content) replacements))
 
-(defn append-resource-to-file
+(defn prepend-to-file
+  [fileset path content replacements]
+  (modify-file fileset path #(str content "\n" %) replacements))
+
+(defn add-resource-to-file
   "Reads a resource file stored in the jar, and appends it to file in 'path'"
-  [fileset path resource-path replacements]
-  (let [new-script (read-resource resource-path)]
-    (append-to-file fileset path new-script replacements)
-    ))
+  ([fileset path resource-path replacements modify-fn]
+   (let [new-script (read-resource resource-path)]
+     (modify-fn fileset path new-script replacements)
+     )))
 
 (defn output-file-path
   [output-dir output-file-path]
@@ -83,7 +88,7 @@
   (let [tmp (c/tmp-dir!)
         out-file (io/file tmp output-path)
         resource-content (read-resource resource-path)]
-    (util/info "Writing " resource-path " to " out-file)
+    (println "Writing " resource-path " to " out-file)
     (doto out-file
       io/make-parents
       (spit resource-content))
@@ -101,7 +106,7 @@
   (let [out-dir (c/tmp-dir!)
         out-file (io/file out-dir out-relative-path)]
     (io/make-parents out-file)
-    (util/info "Writing %s...\n" (.getName out-file))
+    (util/info "Writing cljs-template to %s...\n" (.getName out-file))
     (->> cljs-template
          (map pr-str)
          (interpose "\n")
@@ -138,8 +143,7 @@
 (defn add-cljs-require-to-edn-files
   [fileset ids ns]
   (let [tmp (c/tmp-dir!)]
-    (util/info "Found edn files - " (get-cljs-edn-files fileset ids))
-    (util/info "RUNNING")
+    (println "Found edn files - " (get-cljs-edn-files fileset ids))
     (doseq [edn-file (get-cljs-edn-files fileset ids)]
       (let [path (c/tmp-path edn-file)
             edn-file (c/tmp-file edn-file)

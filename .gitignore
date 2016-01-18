@@ -1,5 +1,5 @@
 target
 .nrepl-history
 .nrepl-port
-out/
+example/out
 tmp/
