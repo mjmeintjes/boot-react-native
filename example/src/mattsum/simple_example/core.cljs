@@ -18,7 +18,7 @@
 (defn root-view
   []
   [view
-   [text "CHANGE THIS: HELLO WORLD"]])
+   [text {:style {:margin-top 22, :margin-left 8}} "CHANGE THIS: HELLO WORLD"]])
 
 (defn mount-root []
   (reag/render [root-view] 1))
