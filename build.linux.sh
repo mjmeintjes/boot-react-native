@@ -323,82 +323,86 @@ travis_fold start before_script.4
 travis_fold end before_script.4
 
 travis_fold start before_script.5
-  travis_cmd echo\ no\ \|\ android\ create\ avd\ --force\ -n\ test\ -t\ android-22\ --abi\ armeabi-v7a --assert --echo --timing
+  travis_cmd android\ list\ targets --assert --echo --timing
 travis_fold end before_script.5
 
 travis_fold start before_script.6
-  travis_cmd emulator\ -avd\ test\ -no-audio\ -no-window\ \& --assert --echo --timing
+  travis_cmd echo\ no\ \|\ android\ create\ avd\ --force\ -n\ test\ -t\ android-22\ --abi\ armeabi-v7a --assert --echo --timing
 travis_fold end before_script.6
 
 travis_fold start before_script.7
-  travis_cmd rm\ -rf\ \~/.nvm\ \&\&\ git\ clone\ https://github.com/creationix/nvm.git\ \~/.nvm\ \&\&\ \(cd\ \~/.nvm\ \&\&\ git\ checkout\ \`git\ describe\ --abbrev\=0\ --tags\`\)\ \&\&\ source\ \~/.nvm/nvm.sh\ \&\&\ nvm\ install\ 4 --assert --echo --timing
+  travis_cmd emulator\ -avd\ test\ -no-audio\ -no-window\ \& --assert --echo --timing
 travis_fold end before_script.7
 
 travis_fold start before_script.8
-  travis_cmd npm\ config\ set\ progress\=false --assert --echo --timing
+  travis_cmd rm\ -rf\ \~/.nvm\ \&\&\ git\ clone\ https://github.com/creationix/nvm.git\ \~/.nvm\ \&\&\ \(cd\ \~/.nvm\ \&\&\ git\ checkout\ \`git\ describe\ --abbrev\=0\ --tags\`\)\ \&\&\ source\ \~/.nvm/nvm.sh\ \&\&\ nvm\ install\ 4 --assert --echo --timing
 travis_fold end before_script.8
 
 travis_fold start before_script.9
-  travis_cmd npm\ config\ set\ spin\=false --assert --echo --timing
+  travis_cmd npm\ config\ set\ progress\=false --assert --echo --timing
 travis_fold end before_script.9
 
 travis_fold start before_script.10
-  travis_cmd npm\ install\ --no-optional --assert --echo --timing
+  travis_cmd npm\ config\ set\ spin\=false --assert --echo --timing
 travis_fold end before_script.10
 
 travis_fold start before_script.11
-  travis_cmd export\ PATH\=\~/bin:\$PATH --assert --echo --timing
+  travis_cmd npm\ install\ --no-optional --assert --echo --timing
 travis_fold end before_script.11
 
 travis_fold start before_script.12
-  travis_cmd export\ BOOT_VERSION\=2.5.5 --assert --echo --timing
+  travis_cmd export\ PATH\=\~/bin:\$PATH --assert --echo --timing
 travis_fold end before_script.12
 
 travis_fold start before_script.13
-  travis_cmd export\ BOOT_JVM_OPTIONS\=\"-Xmx2g\ -client\ -XX:-OmitStackTraceInFastThrow\ -XX:\+TieredCompilation\ -XX:TieredStopAtLevel\=1\ -XX:MaxPermSize\=256m\ -XX:\+UseConcMarkSweepGC\ -XX:\+CMSClassUnloadingEnabled\ -Xverify:none\" --assert --echo --timing
+  travis_cmd export\ BOOT_VERSION\=2.5.5 --assert --echo --timing
 travis_fold end before_script.13
 
 travis_fold start before_script.14
-  travis_cmd \(mkdir\ \~/bin\ \&\&\ cd\ \~/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
+  travis_cmd export\ BOOT_JVM_OPTIONS\=\"-Xmx2g\ -client\ -XX:-OmitStackTraceInFastThrow\ -XX:\+TieredCompilation\ -XX:TieredStopAtLevel\=1\ -XX:MaxPermSize\=256m\ -XX:\+UseConcMarkSweepGC\ -XX:\+CMSClassUnloadingEnabled\ -Xverify:none\" --assert --echo --timing
 travis_fold end before_script.14
 
 travis_fold start before_script.15
-  travis_cmd run-bg\ \"./gradlew\ assembleDebug\ -PdisablePreDex\ -Pjobs\=1\" --assert --echo --timing
+  travis_cmd \(mkdir\ \~/bin\ \&\&\ cd\ \~/bin\ \&\&\ curl\ -fsSLo\ boot\ https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh\ \&\&\ chmod\ 755\ boot\) --assert --echo --timing
 travis_fold end before_script.15
 
 travis_fold start before_script.16
-  travis_cmd run-bg\ \"npm\ install\ -g\ appium\ --no-optional\ \" --assert --echo --timing
+  travis_cmd run-bg\ \"./gradlew\ assembleDebug\ -PdisablePreDex\ -Pjobs\=1\" --assert --echo --timing
 travis_fold end before_script.16
 
 travis_fold start before_script.17
-  travis_cmd \(cd\ ../../..\ \&\&\ boot\ inst\ \&\&\ ./watchman-install.sh\ \&\&\ cd\ example\ \&\&\ boot\ fast-build\ rn/print-android-log\)\ \& --assert --echo --timing
+  travis_cmd run-bg\ \"npm\ install\ -g\ appium\ --no-optional\ \" --assert --echo --timing
 travis_fold end before_script.17
 
 travis_fold start before_script.18
-  travis_cmd run-with-timeout\ 600\ wait-for-bg --assert --echo --timing
+  travis_cmd \(cd\ ../../..\ \&\&\ boot\ inst\ \&\&\ ./watchman-install.sh\ \&\&\ cd\ example\ \&\&\ boot\ fast-build\ rn/print-android-log\)\ \& --assert --echo --timing
 travis_fold end before_script.18
 
 travis_fold start before_script.19
-  travis_cmd run-with-timeout\ 600\ wait-for-avd --assert --echo --timing
+  travis_cmd run-with-timeout\ 600\ wait-for-bg --assert --echo --timing
 travis_fold end before_script.19
 
 travis_fold start before_script.20
-  travis_cmd adb\ devices\ -l --assert --echo --timing
+  travis_cmd run-with-timeout\ 600\ wait-for-avd --assert --echo --timing
 travis_fold end before_script.20
 
 travis_fold start before_script.21
-  travis_cmd adb\ install\ app/build/outputs/apk/app-debug.apk --assert --echo --timing
+  travis_cmd adb\ devices\ -l --assert --echo --timing
 travis_fold end before_script.21
 
 travis_fold start before_script.22
-  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+  travis_cmd adb\ install\ app/build/outputs/apk/app-debug.apk --assert --echo --timing
 travis_fold end before_script.22
+
+travis_fold start before_script.23
+  travis_cmd adb\ shell\ input\ keyevent\ 82\ \& --assert --echo --timing
+travis_fold end before_script.23
 
 travis_cmd cd\ ../..\ \&\&\ ls --echo --timing
 travis_result $?
 travis_cmd appium\ \& --echo --timing
 travis_result $?
-travis_cmd adb\ reverse\ tcp:8001\ tcp:8001 --echo --timing
+travis_cmd adb\ reverse\ tcp:8081\ tcp:8081 --echo --timing
 travis_result $?
 travis_cmd adb\ reverse\ tcp:8079\ tcp:8079 --echo --timing
 travis_result $?

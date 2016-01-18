@@ -21,6 +21,7 @@ matrix:
             - tools
             - build-tools-$ANDROID_BUILD_TOOLS_VERSION
             - android-$ANDROID_API_LEVEL
+            - android-$ANDROID_RUN_LEVEL
             - extra-android-support
             - extra-android-m2repository
             - sys-img-armeabi-v7a-android-$ANDROID_RUN_LEVEL
