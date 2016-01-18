@@ -1,6 +1,6 @@
 (ns ^{:doc "iOS Utility functions
             Reference: https://github.com/kapilreddy/calabash-clj"}
-    appium-clj.util
+    app-testing.util
   (:require [clojure.java.shell :as shell]))
 
 (defn run-sh
