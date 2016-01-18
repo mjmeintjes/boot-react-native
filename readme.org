@@ -63,6 +63,14 @@ To start it up:
  * Replace all references to matt-dev to your computer's hostname in build.boot
  * If using watchman you might have to restart it
 
+* Hacking
+
+To hack on boot-react-native, simply:
+ * run =boot dev= in one terminal. This watches and automatically rebuilds the
+   boot task and installs the jar in the local maven repository.
+ * In another terminal, run =cd example && boot fast build= to build the example
+   app. This way, changes to the boot task are automatically picked up.
+
 * Acknowledgements/Resources
  * A lot/most of the work with regards to hot reloading came from [[https://github.com/decker405/figwheel-react-native][decker405]].
  * Also got a lot of info from [[https://github.com/mfikes/reagent-react-native/][mfikes]], [[https://github.com/chendesheng/ReagentNativeDemo][chendesheng]], [[https://github.com/Gonzih/reagent-native][Gonzih]] and [[https://github.com/nicholaskariniemi/ReactNativeCljs][nicholaskariniemi]].
