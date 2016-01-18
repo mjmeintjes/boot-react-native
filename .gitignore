@@ -2,3 +2,4 @@ target
 .nrepl-history
 .nrepl-port
 example/out
+tmp/

@@ -1,4 +1,6 @@
 /**
+ Based on code originally from https://github.com/decker405/figwheel-react-native
+ 
  Overrides Google Closure's jsloader functionality in order for us to
  support hot reloading.
  Now, instead of injecting <script> tags when asked to load js files,
