@@ -26,7 +26,9 @@
 (defn main
   []
   (js/console.log "MAIN")
-  (mount-root))
+  (.registerComponent js/React.AppRegistry
+                      "SimpleExampleApp"
+                      #(reag/reactify-component root-view)))
 
 (test/deftest testingt
   (test/is (= 1 2) "ERROR"))
