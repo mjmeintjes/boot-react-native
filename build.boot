@@ -27,3 +27,7 @@
      (pom)
      (jar)
      (install)))
+
+(deftask deploy []
+  (comp (build-jar)
+     (push-snapshot)))
