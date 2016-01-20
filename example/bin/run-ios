@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Runs the example project in the iOS simulator without having to open XCode.
+# Requires XCode command-line tools to be installed.
+
+set -eou pipefail
+
+abspath() {
+    python -c "import os,sys; print os.path.abspath(sys.argv[1])" "$1"
+}
+
+run() {
+    "$proot/util/deploy-to-staging" "$CIRCLE_SHA1"
+}
+
+proot="$(abspath $(dirname "$0")/..)"
+
+cd "${proot}/app"
+
+exec node node_modules/react-native/local-cli/cli.js run-ios
