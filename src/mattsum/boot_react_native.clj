@@ -257,3 +257,13 @@ require('" boot-main "');
         (binding [util/*sh-dir* "app"]
           (util/dosh "node" "node_modules/react-native/local-cli/cli.js" "run-ios")))
       fileset)))
+
+(deftask print-ios-log
+  "Print iOS simulator log"
+  []
+  (let [running (atom false)]
+    (c/with-pre-wrap fileset
+      (when-not @running ;; make sure we run only once
+        (reset! running true)
+        (util/sh "tail" "-f" (bh/newest-log)))
+      fileset)))
