@@ -243,6 +243,17 @@ require('" boot-main "');
    s server-url SERVE str "The (optional) IP address and port for the websocket server to listen on."
    A app-dir OUT str  "The (relative) path to the React Native application"]
   (comp (react-native-devenv :output-dir output-dir
-                          :asset-path asset-path
-                          :server-url server-url)
-     (start-rn-packager :app-dir app-dir)))
+                             :asset-path asset-path
+                             :server-url server-url)
+        (start-rn-packager :app-dir app-dir)))
+
+(deftask run-in-simulator
+  "Run the app in the simulator"
+  []
+  (let [running (atom false)]
+    (c/with-post-wrap fileset
+      (when-not @running ;; make sure we run only once
+        (reset! running true)
+        (binding [util/*sh-dir* "app"]
+          (util/dosh "node" "node_modules/react-native/local-cli/cli.js" "run-ios")))
+      fileset)))
