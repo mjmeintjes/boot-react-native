@@ -22,11 +22,14 @@
       :license {"Eclipse Public License"
                 "http://www.eclipse.org/legal/epl-v10.html"}})
 
-(deftask dev []
-  (comp (watch)
-     (pom)
+(deftask inst []
+  (comp (pom)
      (jar)
      (install)))
+
+(deftask dev []
+  (comp (watch)
+     (inst)))
 
 (deftask deploy []
   (comp (build-jar)
