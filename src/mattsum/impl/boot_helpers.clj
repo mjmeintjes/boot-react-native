@@ -176,3 +176,12 @@
 
 (defn exit-code [process]
   (future (conch/exit-code process)))
+
+(defn newest-log []
+  (some->> (str (System/getProperty "user.home") "/Library/Logs/CoreSimulator")
+           clojure.java.io/file
+           file-seq
+           (filter #(->> % .getName (= "system.log")))
+           (sort-by #(.lastModified %) #(compare %2 %1))
+           first
+           .getPath))
