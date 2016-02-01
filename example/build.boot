@@ -56,3 +56,10 @@
   []
   (watch)
   (rn/start-rn-packager))
+
+(deftask dist
+  "Build a distributable bundle of the app"
+  []
+  (comp
+   (cljs :optimizations :whitespace)
+   (target :dir ["app/dist"])))
