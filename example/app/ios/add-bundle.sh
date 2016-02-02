@@ -8,7 +8,7 @@ abspath() {
 }
 
 copy_bundle() {
-    bundle="$proot/app/main.jsbundle"
+    bundle="$proot/app/dist/main.jsbundle"
     dest="$tdir/main.jsbundle"
 
     rm -f "$dest"

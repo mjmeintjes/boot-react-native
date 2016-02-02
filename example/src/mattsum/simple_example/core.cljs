@@ -4,11 +4,13 @@
 
 #_(enable-console-print!)
 
+;; we need set! for advanced compilation
 
 (set! js/React (js/require "react-native/Libraries/react-native/react-native.js"))
+(defonce react (js/require "react-native/Libraries/react-native/react-native.js"))
 
-(def view (reag/adapt-react-class (.-View js/React)))
-(def text (reag/adapt-react-class (.-Text js/React)))
+(def view (reag/adapt-react-class (.-View react)))
+(def text (reag/adapt-react-class (.-Text react)))
 
 (defn testf
   []
@@ -23,10 +25,10 @@
 (defn mount-root []
   (reag/render [root-view] 1))
 
-(defn main
+(defn ^:export main
   []
   (js/console.log "MAIN")
-  (.registerComponent js/React.AppRegistry
+  (.registerComponent (.-AppRegistry react)
                       "SimpleExampleApp"
                       #(reag/reactify-component root-view)))
 

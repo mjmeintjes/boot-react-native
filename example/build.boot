@@ -1,6 +1,6 @@
 (set-env!
  :source-paths   #{"src" "react-support"}
- ;:target-path "app/build"
+ :resource-paths   #{"resources"}
  :exclusions ['cljsjs/react]
  :dependencies '[
                  [mattsum/boot-react-native "0.1.1-SNAPSHOT" :scope "test"]
@@ -25,6 +25,7 @@
  '[crisptrutski.boot-cljs-test  :as test :refer  [test-cljs]]
  '[pandeiro.boot-http           :refer  [serve]]
  '[boot.core                    :as     b]
+ '[boot.util                    :as     u]
  '[clojure.string               :as     s]
  '[mattsum.boot-react-native    :as     rn]
  )
@@ -57,9 +58,42 @@
   (watch)
   (rn/start-rn-packager))
 
+(defn ^:private file-by-path [path fileset]
+  (b/tmp-file (get (:tree fileset) path)))
+
+(defn bundle* [in out]
+  (let [cli (-> "app/node_modules/react-native/local-cli/cli.js"
+                java.io.File.
+                .getAbsolutePath)
+        dir (-> in .getAbsoluteFile .getParent)
+        fname (-> in .getAbsolutePath)]
+    (binding [u/*sh-dir* "app"]
+      ;; TODO: generate temp file name here
+      (u/dosh "cp" fname "temp.js")
+      (u/dosh "node" cli
+              "bundle" "--platform" "ios"
+              "--dev" "true"
+              "--entry-file" "temp.js"
+              "--bundle-output" (.getAbsolutePath out))
+      (u/dosh "rm" "-f" "temp.js"))))
+
+(deftask bundle
+  "Bundle the files specified"
+  [f files ORIGIN:TARGET {str str} "{origin target} pair of files to bundle"]
+  (let  [tmp (b/tmp-dir!)]
+    (b/with-pre-wrap fileset
+      (u/dbug "File mapping: %s\n" (pr-str files))
+      (doseq [[origin target] files]
+        (let [in  (file-by-path origin fileset)
+              out (clojure.java.io/file tmp target)]
+          (clojure.java.io/make-parents out)
+          (bundle* in out)))
+      (-> fileset (b/add-resource tmp) b/commit!))))
+
 (deftask dist
   "Build a distributable bundle of the app"
   []
   (comp
-   (cljs :optimizations :whitespace)
+   (cljs :ids #{"main"})
+   (bundle :files {"main.js" "main.jsbundle"})
    (target :dir ["app/dist"])))
