@@ -274,10 +274,10 @@ require('" boot-main "');
 
 (deftask print-ios-log
   "Print iOS simulator log"
-  []
+  [g grep GREP str "Only print lines containg GREP, using fgrep(1). Defaults to printing all lines"]
   (let [!running (atom false)]
     (c/with-pre-wrap fileset
       (when-not @!running ;; make sure we run only once
         (reset! !running true)
-        (future (bh/tail-fn bh/newest-log)))
+        (future (bh/tail-fn bh/newest-log grep)))
       fileset)))

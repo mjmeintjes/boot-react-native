@@ -197,24 +197,38 @@
            first
            .getPath))
 
+(defn ->grep [only]
+  (assert (string? only))
+  (assert (and (not (.contains only "'")) (not (.contains only "\\")))
+          "Search term must not contain special chars")
+  ["bash" "-c" (format  "\"$@\" | grep --line-buffered -F '%s'" only) "ignore-first-arg"])
+
+(defn tail-cmd [fname only]
+  (let [prefix (if only (->grep only) [])]
+    (concat prefix ["tail" "-0f" fname])))
+
 (defn tail-fn
   "Tails filename returned by newest-fn. Periodically checks is newest-fn
-  returns a different filename. If so, stops previous tail and tails new file."
-  [newest-fn]
-  (let [!proc (atom nil)]
-    (try
-      (loop [curr nil
-             fname (newest-fn)]
-        (when-not (= curr fname)
-          (when-let [proc @!proc]
-            (conch/destroy proc)
-            (reset! !proc nil))
-          (do
-            (println (str "Now tailing " fname "..."))
-            (reset! !proc (sh* "tail" "-0f" fname))))
-        (Thread/sleep 500)
-        (recur fname (newest-fn)))
-      (finally
-        (when-let [proc @!proc]
-          (conch/destroy proc)
-          (reset! !proc nil))))))
+  returns a different filename. If so, stops previous tail and tails new file.
+
+  If only is provided, filter output by grepping for that string."
+  ([newest-fn] (tail-fn newest-fn nil))
+  ([newest-fn only]
+   (let [!proc (atom nil)]
+     (try
+       (loop [curr nil
+              fname (newest-fn)]
+         (when-not (= curr fname)
+           (when-let [proc @!proc]
+             (conch/destroy proc)
+             (reset! !proc nil))
+           (do
+             (let [cmd (tail-cmd fname only)]
+               (util/info "Now tailing %s...\n" fname)
+               (reset! !proc (apply sh* cmd)))))
+         (Thread/sleep 500)
+         (recur fname (newest-fn)))
+       (finally
+         (when-let [proc @!proc]
+           (conch/destroy proc)
+           (reset! !proc nil)))))))
