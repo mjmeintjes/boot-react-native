@@ -15,6 +15,7 @@
                  [org.clojure/clojure            "1.7.0"]
                  [org.clojure/clojurescript      "1.7.170"]
                  [reagent                        "0.5.1"]
+                 ;; [react-native-externs "0.0.1-SNAPSHOT"]
                  ]
  )
 
@@ -62,20 +63,21 @@
   (b/tmp-file (get (:tree fileset) path)))
 
 (defn bundle* [in out]
-  (let [cli (-> "app/node_modules/react-native/local-cli/cli.js"
+  (let [tempfname "nested/temp/temp.js"
+        cli (-> "app/node_modules/react-native/local-cli/cli.js"
                 java.io.File.
                 .getAbsolutePath)
         dir (-> in .getAbsoluteFile .getParent)
         fname (-> in .getAbsolutePath)]
     (binding [u/*sh-dir* "app"]
       ;; TODO: generate temp file name here
-      (u/dosh "cp" fname "temp.js")
+      (u/dosh "cp" fname tempfname)
       (u/dosh "node" cli
               "bundle" "--platform" "ios"
               "--dev" "true"
-              "--entry-file" "temp.js"
+              "--entry-file" tempfname
               "--bundle-output" (.getAbsolutePath out))
-      (u/dosh "rm" "-f" "temp.js"))))
+      (u/dosh "rm" "-f" tempfname))))
 
 (deftask bundle
   "Bundle the files specified"
