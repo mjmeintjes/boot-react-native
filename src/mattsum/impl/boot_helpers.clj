@@ -170,6 +170,17 @@
       (future (conch/stream-to process :err (System/err)))
       process)))
 
+(defn sh*
+  [& args]
+  (let [args (remove nil? args)]
+    (assert (every? string? args))
+    (let [opts (into [:redirect-err true] (when util/*sh-dir* [:dir util/*sh-dir*]))
+          proc (apply conch/proc (concat args opts))]
+      (future (conch/stream-to-out proc :out))
+      (future (conch/stream-to proc :err (System/err)))
+      proc)))
+
+
 (defn kill [process]
   (when-not (nil? process)
     (conch/destroy process)))
@@ -185,3 +196,25 @@
            (sort-by #(.lastModified %) #(compare %2 %1))
            first
            .getPath))
+
+(defn tail-fn
+  "Tails filename returned by newest-fn. Periodically checks is newest-fn
+  returns a different filename. If so, stops previous tail and tails new file."
+  [newest-fn]
+  (let [!proc (atom nil)]
+    (try
+      (loop [curr nil
+             fname (newest-fn)]
+        (when-not (= curr fname)
+          (when-let [proc @!proc]
+            (conch/destroy proc)
+            (reset! !proc nil))
+          (do
+            (println (str "Now tailing " fname "..."))
+            (reset! !proc (sh* "tail" "-0f" fname))))
+        (Thread/sleep 500)
+        (recur fname (newest-fn)))
+      (finally
+        (when-let [proc @!proc]
+          (conch/destroy proc)
+          (reset! !proc nil))))))

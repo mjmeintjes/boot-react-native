@@ -275,9 +275,9 @@ require('" boot-main "');
 (deftask print-ios-log
   "Print iOS simulator log"
   []
-  (let [running (atom false)]
+  (let [!running (atom false)]
     (c/with-pre-wrap fileset
-      (when-not @running ;; make sure we run only once
-        (reset! running true)
-        (util/sh "tail" "-f" (bh/newest-log)))
+      (when-not @!running ;; make sure we run only once
+        (reset! !running true)
+        (future (bh/tail-fn bh/newest-log)))
       fileset)))

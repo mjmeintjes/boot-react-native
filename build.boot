@@ -22,8 +22,10 @@
       :license {"Eclipse Public License"
                 "http://www.eclipse.org/legal/epl-v10.html"}})
 
-(deftask dev []
+(deftask dev
+  "Continuously build jar and install to local maven repository"
+  []
   (comp (watch)
-     (pom)
-     (jar)
-     (install)))
+        (pom)
+        (jar)
+        (install)))
