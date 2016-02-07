@@ -27,20 +27,31 @@ function getSourceMapModuleName(code) {
 }
 function transform(code, filename, callback) {
     fs.readFile(filename + '.map', function (err, map) {
-        var sourceMap = err ?
-                getBasicSourceMap(filename, code) :
-                JSON.parse(map.toString());
+        console.log("Generating sourcemap for " + filename);
+        var shouldGenerateSourceMap =
+                !err && filename.indexOf("/cljs.") == -1 && filename.indexOf("/clojure.") == -1;
 
-        sourceMap.sources = [getSourceMapModuleName(code)];
-
-        //Hardcode the root where our cljs files have been moved to
-        sourceMap.sourceRoot = "/build/node_modules/";
-        //Alternatively we could set sourcesContent to [<CONTENT OF CLJS FILE>]
-
-        callback(null, {
-            code: code.replace("# sourceMappingURL=", ""),
-            map: sourceMap
-        });
+        if (shouldGenerateSourceMap) {
+            var sourceMap = JSON.parse(map.toString());
+            sourceMap.sources = [getSourceMapModuleName(code)];
+            sourceMap.sourceRoot = "/build/node_modules/";
+            fs.readFile(filename.replace(".js", ".cljs"), function (err, cljs) {
+                if (!err) {
+                    sourceMap.sourcesContent = [cljs.toString()];
+                }
+                sourceMap.file = "bundle.js";
+                callback(null, {
+                    code: code.replace("# sourceMappingURL=", ""),
+                    map: sourceMap
+                });
+            });
+        } else {
+            sourceMap = getBasicSourceMap(filename, code);
+            callback(null, {
+                code: code,
+                map: sourceMap
+            });
+        }
     });
 }
 
@@ -80,12 +91,12 @@ function getBasicSourceMap(filename, code) {
 
     var mappings = getBasicMappings(code);
     const map = {
-        file: filename,
+        file: "bundle.js",
         sources: [filename],
         version: 3,
         names: [],
-        mappings: mappings,
-        sourcesContent: [code]
+        mappings: "",
+        sourcesContent: [""]
     };
     return map;
 }
