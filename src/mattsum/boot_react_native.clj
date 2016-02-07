@@ -184,12 +184,10 @@ require('" boot-main "');
                        ;; TODO: Support console.group? - will need support from JS side as well
                        (println line))]
     (c/with-pre-wrap fileset
-      (with-programs [adb]
-        (when (nil? @log-process)
-          (reset! log-process
-                  (adb "logcat" "-v" "time" "*:S" "ReactNative:V" "ReactNativeJS:V"
-                       {:out process-line})))
-        )
+      (when (nil? @log-process)
+        (reset! log-process
+          (util/sh "adb" "logcat" "-v" "time" "*:S" "ReactNative:V" "ReactNativeJS:V")))
+      
       fileset)))
 
 (deftask start-rn-packager
