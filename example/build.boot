@@ -49,6 +49,7 @@
         (cljs :main "mattsum.simple-example.core")
         (rn/after-cljsbuild :server-url "localhost:8081")
         (if (= :ios platform) (rn/print-ios-log) identity)
+        (if (= :android platform) (rn/print-android-log) identity)
         (target :dir ["app/build"])
         ))
 

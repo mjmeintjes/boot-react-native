@@ -187,8 +187,8 @@ require('" boot-main "');
       (with-programs [adb]
         (when (nil? @log-process)
           (reset! log-process
-                  (adb "logcat" "-v" "time" "*:S" "ReactNative:V" "ReactNativeJS:V"
-                       {:out process-line})))
+                  (future (adb "logcat" "-v" "time" "*:S" "ReactNative:V" "ReactNativeJS:V"
+                               {:out process-line}))))
         )
       fileset)))
 
