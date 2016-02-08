@@ -187,8 +187,8 @@ require('" boot-main "');
       (with-programs [adb]
         (when (nil? @log-process)
           (reset! log-process
-                  (adb "logcat" "-v" "time" "*:S" "ReactNative:V" "ReactNativeJS:V"
-                       {:out process-line})))
+                  (future (adb "logcat" "-v" "time" "*:S" "ReactNative:V" "ReactNativeJS:V"
+                               {:out process-line}))))
         )
       fileset)))
 
@@ -274,12 +274,12 @@ require('" boot-main "');
 
 (deftask print-ios-log
   "Print iOS simulator log"
-  []
-  (let [running (atom false)]
+  [g grep GREP str "Only print lines containg GREP, using fgrep(1). Defaults to printing all lines"]
+  (let [!running (atom false)]
     (c/with-pre-wrap fileset
-      (when-not @running ;; make sure we run only once
-        (reset! running true)
-        (util/sh "tail" "-f" (bh/newest-log)))
+      (when-not @!running ;; make sure we run only once
+        (reset! !running true)
+        (future (bh/tail-fn bh/newest-log grep)))
       fileset)))
 
 (deftask bundle
