@@ -26,7 +26,7 @@ adb reverse tcp:8081 tcp:8081 # packager
 adb reverse tcp:8079 tcp:8079 # reloading
 adb reverse tcp:9001 tcp:9001 # repl
 
-boot fast-build & #2>&1 1>/dev/null &
+boot dev & #2>&1 1>/dev/null &
 appium & #2>&1 1>/dev/null &
 echo "Waiting for boot to start up"
 wait-for-url "http://localhost:8081/index.android.bundle?platform=android"
