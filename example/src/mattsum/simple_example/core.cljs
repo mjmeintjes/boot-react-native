@@ -25,6 +25,7 @@
 
 (defn main
   []
+  (enable-console-print!)
   (js/console.log "MAIN")
   (.registerComponent js/React.AppRegistry
                       "SimpleExampleApp"
@@ -35,7 +36,6 @@
 
 (defn on-js-reload
   []
-  (enable-console-print!)
   (test/run-tests)
   (js/console.log "JS RELOADING")
   (mount-root))
