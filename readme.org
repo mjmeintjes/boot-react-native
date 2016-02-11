@@ -27,6 +27,7 @@ Integrates with normal nrepl process:
  * Setup your build pipeline (see example app)
  * Start your build pipeline (=boot dev= in example app)
  * In another terminal, connect to repl using =boot repl -c=
+ * Invoke =(start-repl)= (see [[https://github.com/adzerk-oss/boot-cljs-repl#user-content-repl][boot-cljs-repl]])
 ** How to use?
 Simply add the tasks =(before-cljsbuild)= to your build pipeline somewhere before =(cljs)=, and =(after-cljsbuild)= to somewhere after =(cljs)=. There is an example in the example directory that illustrates this - here's the main task from the example:
 
