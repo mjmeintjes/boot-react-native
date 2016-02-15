@@ -77,8 +77,7 @@ To run the tests, ensure that your device/emulator is connected to adb (run =adb
 inside the example directory.
 
 * Related projects
- * [[https://github.com/jellea/react-native-boot-template][boot-new template for boot-react-native]] - run =boot -d seancorfield/boot-new new -S -t boot-react-native -n your-brand-new-app= to create
-a new app based on boot-react-native.
+ * [[https://github.com/jellea/react-native-boot-template][boot-new template for boot-react-native]] - run =boot -d seancorfield/boot-new new -S -t boot-react-native -n your-brand-new-app= to create a new app based on boot-react-native.
 * Hacking
 
 To hack on boot-react-native, simply:
