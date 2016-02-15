@@ -1,1 +1,1 @@
-(cd .. && boot inst) && boot fast-build
+(cd .. && boot inst) && boot dev
