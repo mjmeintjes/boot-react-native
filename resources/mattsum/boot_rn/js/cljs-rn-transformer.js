@@ -10,9 +10,9 @@
  */
 'use strict';
 
-// TODO: this should probably not be hardcoded
 const fs = require('fs');
 const transformer = require('react-native/packager/transformer');
+const sourceMapRoot = "/build/node_modules/";
 
 const util = require('util');
 function getSourceMapModuleName(code) {
@@ -28,15 +28,14 @@ function getSourceMapModuleName(code) {
 function transform(code, filename, callback) {
     fs.readFile(filename + '.map', function (err, map) {
         console.log("Generating sourcemap for " + filename);
-        var shouldGenerateSourceMap =
-                !err && filename.indexOf("/cljs.") == -1 && filename.indexOf("/clojure.") == -1;
+        var shouldGenerateSourceMap = !err;
 
         if (shouldGenerateSourceMap) {
             var sourceMap = JSON.parse(map.toString());
-            sourceMap.sources = [getSourceMapModuleName(code)];
-            sourceMap.sourceRoot = "/build/node_modules/";
+            sourceMap.sourceRoot = sourceMapRoot;
             fs.readFile(filename.replace(".js", ".cljs"), function (err, cljs) {
                 if (!err) {
+                    sourceMap.sources = [filename.replace('.js', '.cljs')];
                     sourceMap.sourcesContent = [cljs.toString()];
                 }
                 sourceMap.file = "bundle.js";
@@ -57,7 +56,6 @@ function transform(code, filename, callback) {
 
 function getBasicMappings(code) {
     //TODO: This is copied from https://github.com/facebook/react-native/blob/528e30987aba8848f8c8815f00c42ecb2ce0919a/packager/react-packager/src/Bundler/Bundle.js#L265
-    //but unfortunately I know next to nothing about setting up source maps.
     //Therefore it is not working. But, this is only run for js files, and Chrome falls
     //back to displaying the Javascript from the bundled file anyway when it can't understand
     //the source mappings from here.
@@ -95,7 +93,7 @@ function getBasicSourceMap(filename, code) {
         sources: [filename],
         version: 3,
         names: [],
-        mappings: "",
+        mappings: mappings,
         sourcesContent: [""]
     };
     return map;
