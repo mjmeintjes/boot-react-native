@@ -16,54 +16,69 @@ This library aims to fix all of the above. It:
  * Allows for integration with other cljs boot tasks - cljs-repl, reload, cljs-test
  * Provides tasks to auto start react native packager
  * Custom transformer for react-native to speed up builds significantly
- * Logging server to allow for capturing console.log output on command line
+ * Capture Android and iOS log output and print to command line
+ * Run iOS application directly from command line (without starting up xcode)
+ * Source map support
+** Getting started
+To get started, simply add the tasks =(before-cljsbuild)= to your build pipeline somewhere before =(cljs)=, and =(after-cljsbuild)= to somewhere after =(cljs)=.
+
+There is an example in the example directory that illustrates this - here's the main task from the example:
+
+#+BEGIN_SRC clojure
+(deftask dev []
+  (comp (watch)
+        (reload :on-jsload 'mattsum.simple-example.core/on-js-reload
+                :port 8079
+                )
+        (rn/before-cljsbuild)
+        (cljs-repl :ip "0.0.0.0")
+        (cljs :main "mattsum.simple-example.core")
+        (rn/after-cljsbuild :server-url "localhost:8081")
+        ))
+#+END_SRC
 ** Features
 *** Hot reloading
 Automatically reloads cljs files as you edit them. Better than normal React Native reloading because it keeps your application state, and just changes the behaviour.
 
-Hot reloading works in both Chrome Debug mode and normal mode.
+Hot reloading works in both Chrome Debug mode and normal mode. To enable reloading, just use =[[https://github.com/adzerk-oss/boot-reload][boot-reload]]=.
 *** NRepl support
 Integrates with normal nrepl process:
  * Setup your build pipeline (see example app)
  * Start your build pipeline (=boot dev= in example app)
  * In another terminal, connect to repl using =boot repl -c=
  * Invoke =(start-repl)= (see [[https://github.com/adzerk-oss/boot-cljs-repl#user-content-repl][boot-cljs-repl]])
-** How to use?
-Simply add the tasks =(before-cljsbuild)= to your build pipeline somewhere before =(cljs)=, and =(after-cljsbuild)= to somewhere after =(cljs)=. There is an example in the example directory that illustrates this - here's the main task from the example:
-
-#+BEGIN_SRC clojure
-(deftask dev []
-  (comp (serve :handler 'mattsum.simple-log-server/log
-               :port 8000)
-        (watch)
-        (reload :on-jsload 'mattsum.simple-example.core/on-js-reload
-                :port 8079
-                :ws-host "matt-dev"
-                )
-        (rn/before-cljsbuild)
-
-        (cljs-repl :ws-host "matt-dev"
-                   :ip "0.0.0.0")
-
-        (cljs :main "mattsum.simple-example.core")
-        (rn/after-cljsbuild :server-url "matt-dev:8081")
-        ))
-#+END_SRC
-
+ * REPL should start up - if it doesn't, reload the app on your mobile device.
+*** Sourcemap support
+Supports Chrome Dev Tools source map mapping for cljs files. To use, simply ensure that source map support is enabled in Chrome, and then select
+"Debug In Chrome" option in your app. Source maps should automatically then be loaded for cljs files.
+*** Run app in iOS simulator
+Add the task =run-in-simulator= to the end of your build pipeline to automatically run your app in iOS simulator after building.
+*** Print logs to console
+Add tasks =print-android-log= or =print-ios-log= to your build pipeline to print Android/iOS logs to your command line. Can also run
+=boot print-android-log= or =boot print-ios-log= in a separate terminal to automatically follow the Android/iOS logs.
 * Limitations
 ALPHA quality - task names, api, etc can and probably will still change. Lots of testing still needs to be done. Several additional features are planned.
-
-This should work with Android and IOS. However, so far it has only been tested with Android.
 * Example App
 There is an example app to demonstrate using this plugin.
 
 To start it up:
  * Run =npm install= inside example/app
- * Run =boot fast-build= inside example
- * Install app on your phone/emulator (should be connected via adb) - =(cd example/app/android && ./gradlew installDebug "$@")=
- * Replace all references to matt-dev to your computer's hostname in build.boot
+ * Run =boot dev= inside example
+ * For Android:
+   * Connect device to computer
+   * Install app on your phone/emulator (should be connected via adb) - =(cd example/app/android && ./gradlew installDebug "$@")=
  * If using watchman you might have to restart it
 
+** Running tests
+The example app has some tests to ensure that reloading and repl support works. It is currently only set-up to work with
+Android, but it does give a good example of how to automate and write integration tests for React Native.
+
+To run the tests, ensure that your device/emulator is connected to adb (run =adb devices=), and then run =./test-reloading.sh=
+inside the example directory.
+
+* Related projects
+ * [[https://github.com/jellea/react-native-boot-template][boot-new template for boot-react-native]] - run =boot -d seancorfield/boot-new new -S -t boot-react-native -n your-brand-new-app= to create
+a new app based on boot-react-native.
 * Hacking
 
 To hack on boot-react-native, simply:
@@ -76,7 +91,6 @@ To hack on boot-react-native, simply:
  * A lot/most of the work with regards to hot reloading came from [[https://github.com/decker405/figwheel-react-native][decker405]].
  * Also got a lot of info from [[https://github.com/mfikes/reagent-react-native/][mfikes]], [[https://github.com/chendesheng/ReagentNativeDemo][chendesheng]], [[https://github.com/Gonzih/reagent-native][Gonzih]] and [[https://github.com/nicholaskariniemi/ReactNativeCljs][nicholaskariniemi]].
  * [[http://cljsrn.org/][Here's]] another great resource with information about ClojureScript and React Native that helped a lot.
- * Several other projects here on GitHub that I can't find at the moment.
 
 * License
 
