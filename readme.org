@@ -84,7 +84,7 @@ a new app based on boot-react-native.
 To hack on boot-react-native, simply:
  * run =boot dev= in one terminal. This watches and automatically rebuilds the
    boot task and installs the jar in the local maven repository.
- * In another terminal, run =cd example && boot fast build= to build the example
+ * In another terminal, run =cd example && boot dev= to build the example
    app. This way, changes to the boot task are automatically picked up.
 
 * Acknowledgements/Resources
