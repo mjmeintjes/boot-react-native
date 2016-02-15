@@ -33,6 +33,12 @@
         new-content (str content "\n/* \n * @providesModule " (.replace module-name ".js" "") "\n */\n")]
     (spit target-file new-content)))
 
+(defn update-sourcemap-url
+  [source-file target-file module-name]
+  (let [content (slurp source-file)
+        new-content (s/replace content #"sourceMappingURL=(.*)" (str "sourceMappingURL=" (str module-name ".map")))]
+    (spit target-file new-content)))
+
 (defn new-hard-link [src target]
   (when (fl/exists? target)
     (fl/delete-file target))
@@ -81,6 +87,7 @@
     (when source-file
       (io/make-parents target-file)
       (add-provides-module-metadata source-file target-file ns)
+      (update-sourcemap-url target-file target-file ns)
       (when (and (fl/exists? map-file)
                  (fl/exists? cljs-file))
         (new-hard-link map-file target-map)

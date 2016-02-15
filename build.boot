@@ -24,8 +24,8 @@
 
 (deftask inst []
   (comp (pom)
-        (jar)
-        (install)))
+     (jar)
+     (install)))
 
 (deftask dev []
   "Continuously build jar and install to local maven repository"

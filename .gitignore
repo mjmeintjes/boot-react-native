@@ -3,4 +3,6 @@ target
 .nrepl-port
 example/out
 .tern-port
+tmp/dist/
+example/app/dist/
 tmp/
