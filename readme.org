@@ -40,7 +40,7 @@ There is an example in the example directory that illustrates this - here's the 
 *** Hot reloading
 Automatically reloads cljs files as you edit them. Better than normal React Native reloading because it keeps your application state, and just changes the behaviour.
 
-Hot reloading works in both Chrome Debug mode and normal mode. To enable reloading, just use =[[https://github.com/adzerk-oss/boot-reload][boot-reload]]=.
+Hot reloading works in both Chrome Debug mode and normal mode. To enable reloading, just use [[https://github.com/adzerk-oss/boot-reload][boot-reload]].
 *** NRepl support
 Integrates with normal nrepl process:
  * Setup your build pipeline (see example app)
