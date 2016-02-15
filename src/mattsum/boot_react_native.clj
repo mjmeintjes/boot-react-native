@@ -13,9 +13,23 @@
 ;;(use 'alex-and-georges.debug-repl)
 
 (deftask link-goog-deps
-  "Parses Google Closure deps files, and creates a link in the output node_modules directory to each file.
+  "Parses Google Closure deps files, and creates a link in the output node_modules directory
+   to each file.
 
-   This makes it possible for the React Native packager to pick up the dependencies when building the JavaScript Bundle allowing us to develop with :optimizations :none"
+   This makes it possible for the React Native packager to pick up the dependencies when building
+   the JavaScript Bundle allowing us to develop with :optimizations :none.
+   
+   Explanation:
+   In order for `:optimizations :none` to work (where cljs just spits out individual files),
+   we have to let React Native know about those files. Luckily, RN packager picks up `goog.require`
+   just like it picks up `require`. Unluckily, `goog.require` does not map to a specific file. Rather,
+   Google Closure maps the module name provided in `goog.require` to a file name via mappings set up
+   in deps.js files.
+   
+   Because we are short-circuiting `goog.require` in order to work with RN, we need to short-circuit
+   the deps lookup as well. This task looks up the filename for each cljs module, and then renames
+   that file (using the module name expected by `require`), and places the file in `node_modules`,
+   because that is where React Native expects it to be."
   [d deps-files DEPS #{str}  "A list of relative paths to deps files to parse"
    o cljs-dir OUT str  "The cljs :output-dir"]
   (let [previous-files (atom nil)
@@ -173,8 +187,8 @@ require('" boot-main "');
       (with-programs [adb]
         (when (nil? @log-process)
           (reset! log-process
-                  (adb "logcat" "-v" "time" "*:S" "ReactNative:V" "ReactNativeJS:V"
-                       {:out process-line})))
+                  (future (adb "logcat" "-v" "time" "*:S" "ReactNative:V" "ReactNativeJS:V"
+                               {:out process-line}))))
         )
       fileset)))
 
@@ -243,6 +257,27 @@ require('" boot-main "');
    s server-url SERVE str "The (optional) IP address and port for the websocket server to listen on."
    A app-dir OUT str  "The (relative) path to the React Native application"]
   (comp (react-native-devenv :output-dir output-dir
-                          :asset-path asset-path
-                          :server-url server-url)
-     (start-rn-packager :app-dir app-dir)))
+                             :asset-path asset-path
+                             :server-url server-url)
+        (start-rn-packager :app-dir app-dir)))
+
+(deftask run-in-simulator
+  "Run the app in the simulator"
+  []
+  (let [running (atom false)]
+    (c/with-post-wrap fileset
+      (when-not @running ;; make sure we run only once
+        (reset! running true)
+        (binding [util/*sh-dir* "app"]
+          (util/dosh "node" "node_modules/react-native/local-cli/cli.js" "run-ios")))
+      fileset)))
+
+(deftask print-ios-log
+  "Print iOS simulator log"
+  [g grep GREP str "Only print lines containg GREP, using fgrep(1). Defaults to printing all lines"]
+  (let [!running (atom false)]
+    (c/with-pre-wrap fileset
+      (when-not @!running ;; make sure we run only once
+        (reset! !running true)
+        (future (bh/tail-fn bh/newest-log grep)))
+      fileset)))

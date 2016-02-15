@@ -28,6 +28,7 @@
      (install)))
 
 (deftask dev []
+  "Continuously build jar and install to local maven repository"
   (comp (watch)
      (inst)))
 

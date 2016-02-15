@@ -29,22 +29,29 @@
  '[mattsum.boot-react-native    :as     rn]
  )
 
-(deftask fast-build []
+(deftask dev
+  "Build app and watch for changes"
+  [p platform PLATFORM kw "The platform to target (ios or android)"]
+  []
+  (assert (or (nil? platform) (#{:ios :android} platform)))
   (comp (watch)
-     (reload :on-jsload 'mattsum.simple-example.core/on-js-reload
-             :port 8079
-             :ws-host "localhost"
-             )
-     (rn/before-cljsbuild)
+        (if (= :ios platform) (rn/run-in-simulator) identity)
+        (reload :on-jsload 'mattsum.simple-example.core/on-js-reload
+                :port 8079
+                :ws-host "localhost"
+                )
+        (rn/before-cljsbuild)
 
-     (cljs-repl :ws-host "localhost"
-                :port 9001
-                :ip "0.0.0.0")
+        (cljs-repl :ws-host "localhost"
+                   :port 9001
+                   :ip "0.0.0.0")
 
-     (cljs :main "mattsum.simple-example.core")
-     (rn/after-cljsbuild :server-url "localhost:8081")
-     (target :dir ["app/build"])
-     ))
+        (cljs :main "mattsum.simple-example.core")
+        (rn/after-cljsbuild :server-url "localhost:8081")
+        (if (= :ios platform) (rn/print-ios-log :grep "SimpleExampleApp") identity)
+        (if (= :android platform) (rn/print-android-log) identity)
+        (target :dir ["app/build"])
+        ))
 
 (deftask packager
   []
