@@ -52,16 +52,24 @@ Simply add the tasks =(before-cljsbuild)= to your build pipeline somewhere befor
 * Limitations
 ALPHA quality - task names, api, etc can and probably will still change. Lots of testing still needs to be done. Several additional features are planned.
 
-This should work with Android and IOS. However, so far it has only been tested with Android.
+This has been tested on Android and IOS.
 * Example App
 There is an example app to demonstrate using this plugin.
 
 To start it up:
  * Run =npm install= inside example/app
  * Run =boot fast-build= inside example
- * Install app on your phone/emulator (should be connected via adb) - =(cd example/app/android && ./gradlew installDebug "$@")=
- * Replace all references to matt-dev to your computer's hostname in build.boot
+ * Install app on your phone/emulator (should be connected via adb).
+  * For Android, run =(cd example/app/android && ./gradlew installDebug "$@")=
+  * For iOS, open the SimleExampleApp XCode project and click run.
+ * If you want to test on a device, replace all references to localhost to your computer's hostname in build.boot
  * If using watchman you might have to restart it
+
+You can also build a version of the app using an offline (release) bundle. Here are instructions for iOS:
+ * Run =boot dist= inside example
+ * Open the XCode project
+ * Open example/app/ios/SimpleExampleApp/AppDelegate.m and find the "bundle location" section. Uncomment Option 2 (offline bundle)
+ * Click =run=
 
 * Hacking
 
