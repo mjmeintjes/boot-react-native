@@ -2,6 +2,7 @@ language: clojure
 jdk:
     - oraclejdk8
 install:
+    - nvm install 4.0
     - wget -O boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh
     - chmod 755 boot
     - ./boot inst
