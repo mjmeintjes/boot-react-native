@@ -58,6 +58,8 @@ Add tasks =print-android-log= or =print-ios-log= to your build pipeline to print
 =boot print-android-log= or =boot print-ios-log= in a separate terminal to automatically follow the Android/iOS logs.
 * Limitations
 ALPHA quality - task names, api, etc can and probably will still change. Lots of testing still needs to be done. Several additional features are planned.
+
+This has been tested on Android and IOS.
 * Example App
 There is an example app to demonstrate using this plugin.
 
@@ -67,7 +69,15 @@ To start it up:
  * For Android:
    * Connect device to computer
    * Install app on your phone/emulator (should be connected via adb) - =(cd example/app/android && ./gradlew installDebug "$@")=
+ * For iOS:
+   * Open the SimpleExampleApp XCode project and click run.
  * If using watchman you might have to restart it
+You can also build a version of the app using an offline (release) bundle.
+ * For iOS:
+   * Run =boot dist= inside example
+   * Open the XCode project
+   * Open example/app/ios/SimpleExampleApp/AppDelegate.m and find the "bundle location" section. Uncomment Option 2 (offline bundle)
+   * Click =run=
 
 ** Running tests
 The example app has some tests to ensure that reloading and repl support works. It is currently only set-up to work with
