@@ -5,6 +5,6 @@ install:
     - wget -O boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh
     - chmod 755 boot
     - ./boot inst
-    - (cd example && npm install)
+    - (cd example/app && npm install)
 script: cd example && ../boot build
 sudo: false
