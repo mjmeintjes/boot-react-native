@@ -103,7 +103,7 @@
    ["Success"]
    #(eval-repl-command sess "(clj->js \"Success\")")
    "Cljs Repl Startup"
-   15))
+   60))
 
 (defn start-cljs-repl
   ([] (start-cljs-repl nil))

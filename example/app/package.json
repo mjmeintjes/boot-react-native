@@ -6,6 +6,6 @@
     "start": "react-native start"
   },
   "dependencies": {
-    "react-native": "https://github.com/facebook/react-native.git#8638f6a735a8842486a44f9f5527faa14d2c2dec"
+    "react-native": "0.20"
   }
 }

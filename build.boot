@@ -3,14 +3,14 @@
  :resource-paths #{"resources"}
  :dependencies '[
                  [adzerk/bootlaces "0.1.10" :scope "test"]
-                 [pandeiro/boot-http             "0.7.1-SNAPSHOT"  :scope  "test"]
+                 [pandeiro/boot-http "0.7.1-SNAPSHOT"  :scope  "test"]
                  [com.cemerick/url "0.1.1"]
                  [me.raynes/conch "0.8.0"]
                  ])
 
 (require '[adzerk.bootlaces :refer :all]
          '[mattsum.boot-react-native])
-(def +version+ "0.1.1-SNAPSHOT")
+(def +version+ "0.2")
 (bootlaces! +version+)
 
 (task-options!
