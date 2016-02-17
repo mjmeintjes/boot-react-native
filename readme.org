@@ -19,6 +19,7 @@ This library aims to fix all of the above. It:
  * Capture Android and iOS log output and print to command line
  * Run iOS application directly from command line (without starting up xcode)
  * Source map support
+ * Experimental support for creating bundle for building distributable app (currently iOS only, needs more testing)
 ** Getting started
 To get started, simply add the tasks =(before-cljsbuild)= to your build pipeline somewhere before =(cljs)=, and =(after-cljsbuild)= to somewhere after =(cljs)=.
 
@@ -72,7 +73,8 @@ To start it up:
  * For iOS:
    * Open the SimpleExampleApp XCode project and click run.
  * If using watchman you might have to restart it
-You can also build a version of the app using an offline (release) bundle.
+You can also build a version of the app using an offline (release) bundle. This functionality
+is still experimental, and has only been tested with iOS at the moment.
  * For iOS:
    * Run =boot dist= inside example
    * Open the XCode project
