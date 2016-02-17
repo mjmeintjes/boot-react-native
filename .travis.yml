@@ -8,7 +8,7 @@ install:
     - nvm install 4.0
     - wget -O boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh
     - chmod 755 boot
-    - ./boot inst
+    - ./boot -V 
     - (cd example/app && npm install)
-script: cd example && ../boot build
+script: ./boot inst && cd example && ../boot build
 sudo: false
