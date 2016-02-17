@@ -281,3 +281,15 @@ require('" boot-main "');
         (reset! !running true)
         (future (bh/tail-fn bh/newest-log grep)))
       fileset)))
+
+(deftask bundle
+  "Bundle the files specified"
+  [f files ORIGIN:TARGET {str str} "{origin target} pair of files to bundle"]
+  (let  [tmp (c/tmp-dir!)]
+    (c/with-pre-wrap fileset
+      (doseq [[origin target] files]
+        (let [in  (bh/file-by-path origin fileset)
+              out (clojure.java.io/file tmp target)]
+          (clojure.java.io/make-parents out)
+          (bh/bundle* in out tmp)))
+      (-> fileset (c/add-resource tmp) c/commit!))))
