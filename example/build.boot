@@ -59,7 +59,7 @@
   [p platform PLATFORM kw "The platform to target (ios or android)"]
   []
   (comp (watch)
-     (build)))
+        (if platform (build :platform platform) (build))))
 
 (deftask packager
   []
