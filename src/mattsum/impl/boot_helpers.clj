@@ -57,8 +57,7 @@
          (spit out-content))
        (-> fileset
            (c/add-resource tmp)
-           ))))
-)
+           )))))
 
 (defn append-to-file
   [fileset path content replacements]
@@ -203,11 +202,12 @@
 (defn copy-file [source-path dest-path]
   (clojure.java.io/copy (clojure.java.io/file source-path) (clojure.java.io/file dest-path)))
 
-(defn bundle* [in outf outd]
-  (let [tempfname (str "nested/temp/" (java.util.UUID/randomUUID) ".js")
-        temppath (str "app/" tempfname)
+(defn bundle* [app-dir in outf outd]
+  (let [app-dir (or app-dir "app")
+        tempfname (str "nested/temp/" (java.util.UUID/randomUUID) ".js")
+        temppath (str app-dir "/" tempfname)
         tempdirf (->> temppath clojure.java.io/as-file .getParentFile)
-        cli (-> "app/node_modules/react-native/local-cli/cli.js"
+        cli (-> (str app-dir "/node_modules/react-native/local-cli/cli.js")
                 java.io.File.
                 .getAbsolutePath)
         dir (-> in .getAbsoluteFile .getParent)
@@ -218,7 +218,7 @@
     (util/info "Creating temp dir: %s\n" (.getAbsolutePath tempdirf))
     (.mkdirs tempdirf)
     (copy-file fname temppath)
-    (binding [util/*sh-dir* "app"]
+    (binding [util/*sh-dir* app-dir]
       (try
         (util/dosh "node" cli
                    "bundle" "--platform" "ios"

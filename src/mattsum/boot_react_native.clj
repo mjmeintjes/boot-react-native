@@ -284,12 +284,13 @@ require('" boot-main "');
 
 (deftask bundle
   "Bundle the files specified"
-  [f files ORIGIN:TARGET {str str} "{origin target} pair of files to bundle"]
-  (let  [tmp (c/tmp-dir!)]
+  [a app-dir OUT str "The (relative) path to the React Native application"
+   f files ORIGIN:TARGET {str str} "{origin target} pair of files to bundle"]
+  (let [tmp (c/tmp-dir!)]
     (c/with-pre-wrap fileset
       (doseq [[origin target] files]
         (let [in  (bh/file-by-path origin fileset)
               out (clojure.java.io/file tmp target)]
           (clojure.java.io/make-parents out)
-          (bh/bundle* in out tmp)))
+          (bh/bundle* app-dir in out tmp)))
       (-> fileset (c/add-resource tmp) c/commit!))))
