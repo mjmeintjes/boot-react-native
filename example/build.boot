@@ -16,8 +16,7 @@
                  [org.clojure/clojurescript      "1.7.170"]
                  [reagent                        "0.5.1"]
                  ;; [react-native-externs "0.0.1-SNAPSHOT"]
-                 ]
- )
+                 ])
 
 (require
  '[adzerk.boot-cljs             :refer  [cljs]]
@@ -74,5 +73,5 @@
   []
   (comp
    (cljs :ids #{"dist"})
-   (rn/bundle :files {"dist.js" "main.jsbundle"})
+   (rn/bundle :app-dir "app" :files {"dist.js" "main.jsbundle"})
    (target :dir ["app/dist"])))
