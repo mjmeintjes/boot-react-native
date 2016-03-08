@@ -202,7 +202,7 @@
 (defn copy-file [source-path dest-path]
   (clojure.java.io/copy (clojure.java.io/file source-path) (clojure.java.io/file dest-path)))
 
-(defn bundle* [app-dir in outf outd]
+(defn bundle* [{:keys [app-dir platform input-file output-file output-dir]}]
   (let [app-dir (or app-dir "app")
         tempfname (str "nested/temp/" (java.util.UUID/randomUUID) ".js")
         temppath (str app-dir "/" tempfname)
@@ -210,8 +210,8 @@
         cli (-> (str app-dir "/node_modules/react-native/local-cli/cli.js")
                 java.io.File.
                 .getAbsolutePath)
-        dir (-> in .getAbsoluteFile .getParent)
-        fname (-> in .getAbsolutePath)]
+        dir (-> input-file .getAbsoluteFile .getParent)
+        fname (-> input-file .getAbsolutePath)]
     (util/info "Bundling %s...\n" fname)
     ;; create nested temp directory
     ;; we need this in order to keep the react packager happy
@@ -221,11 +221,12 @@
     (binding [util/*sh-dir* app-dir]
       (try
         (util/dosh "node" cli
-                   "bundle" "--platform" "ios"
-                   "--dev" "true"
-                   "--entry-file" tempfname
-                   "--bundle-output" (.getAbsolutePath outf)
-                   "--assets-dest" (.getAbsolutePath outd))
+          "bundle"
+          "--platform" platform
+          "--dev" "true"
+          "--entry-file" tempfname
+          "--bundle-output" (.getAbsolutePath output-file)
+          "--assets-dest" (.getAbsolutePath output-dir))
         (finally
           (util/dosh "rm" "-f" tempfname))))))
 
