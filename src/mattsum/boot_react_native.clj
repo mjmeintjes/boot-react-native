@@ -38,8 +38,10 @@
         ;; Create the output dir in outer context allows us to cache the
         ;; compilation, which means we don't have to re-parse each file
         tmp-dir        (c/tmp-dir!)
-        output-dir     (doto (io/file tmp-dir cljs-dir)
-                         io/make-parents)]
+        output-dir     (if cljs-dir
+                         (doto (io/file tmp-dir cljs-dir)
+                           io/make-parents)
+                         tmp-dir)]
     (with-pre-wrap fileset
       (let [get-hash-diff #(c/fileset-diff @previous-files % :hash)
 
