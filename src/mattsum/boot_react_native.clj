@@ -244,7 +244,7 @@ require('" boot-main "');
       (let [in-file  (c/tmp-file tmp-file)
             relpath  (c/tmp-path tmp-file)
             out-file (io/file work-dir (str/replace relpath (str output-dir "/") ""))]
-        (util/info "... copying %s\n" in-file)
+        (util/dbug "... copying %s\n" in-file)
         (io/make-parents out-file)
         (bf/hard-link in-file out-file)))))
 
