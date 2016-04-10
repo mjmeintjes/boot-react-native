@@ -370,7 +370,8 @@ require('" boot-main "');
                                "--platform" platform
                                "--dev" (str (boolean (not prod)))
                                "--entry-file" origin
-                               "--transformer" rn-transformer-relpath
+                               "--transformer" (.getAbsolutePath
+                                                (io/file rn-work-dir rn-transformer-relpath))
                                "--bundle-output" (.getAbsolutePath out)
                                "--sourcemap-output" (str (.getAbsolutePath out) ".map")
                                "--assets-dest" outd]]
