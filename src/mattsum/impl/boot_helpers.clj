@@ -12,7 +12,6 @@
 
 (defn read-resource-
   [src]
-  (println "Reading resource - " src)
   (->> src io/resource slurp))
 
 ;; For some reason Clojure/boot doesn't like us reading from the jar file too often,
@@ -40,7 +39,6 @@
   the new fileset"
   ([fileset path modify-fn] (modify-file fileset path modify-fn {}))
   ([fileset path modify-fn replacements]
-   (println "Modifying " path " using " modify-fn)
    (let [tmp (c/tmp-dir!)
          out-file (make-absolute tmp path)]
      (let [base-file (->> path
@@ -143,7 +141,6 @@
 (defn add-cljs-require-to-edn-files
   [fileset ids ns]
   (let [tmp (c/tmp-dir!)]
-    (println "Found edn files - " (get-cljs-edn-files fileset ids))
     (doseq [edn-file (get-cljs-edn-files fileset ids)]
       (let [path (c/tmp-path edn-file)
             edn-file (c/tmp-file edn-file)
@@ -199,35 +196,6 @@
 
 (defn file-by-path [path fileset]
   (c/tmp-file (get (:tree fileset) path)))
-
-(defn copy-file [source-path dest-path]
-  (clojure.java.io/copy (clojure.java.io/file source-path) (clojure.java.io/file dest-path)))
-
-(defn bundle* [in outf outd]
-  (let [tempfname (str "nested/temp/" (java.util.UUID/randomUUID) ".js")
-        temppath (str "app/" tempfname)
-        tempdirf (->> temppath clojure.java.io/as-file .getParentFile)
-        cli (-> "app/node_modules/react-native/local-cli/cli.js"
-                java.io.File.
-                .getAbsolutePath)
-        dir (-> in .getAbsoluteFile .getParent)
-        fname (-> in .getAbsolutePath)]
-    (util/info "Bundling %s...\n" fname)
-    ;; create nested temp directory
-    ;; we need this in order to keep the react packager happy
-    (util/info "Creating temp dir: %s\n" (.getAbsolutePath tempdirf))
-    (.mkdirs tempdirf)
-    (copy-file fname temppath)
-    (binding [util/*sh-dir* "app"]
-      (try
-        (util/dosh "node" cli
-                   "bundle" "--platform" "ios"
-                   "--dev" "true"
-                   "--entry-file" tempfname
-                   "--bundle-output" (.getAbsolutePath outf)
-                   "--assets-dest" (.getAbsolutePath outd))
-        (finally
-          (util/dosh "rm" "-f" tempfname))))))
 
 (defn ->grep [only]
   (assert (string? only))
