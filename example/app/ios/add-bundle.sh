@@ -13,7 +13,9 @@ copy_bundle() {
 
     rm -f "$dest"
 
-    cp "$bundle" "$dest"
+    if [[ -f "$bundle" ]]; then
+        cp "$bundle" "$dest"
+    fi
 }
 
 proot="$(abspath $(dirname "$0")/../..)"
