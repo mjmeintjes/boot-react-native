@@ -47,8 +47,7 @@
               :port 9001
               :ip "0.0.0.0")
 
-   (cljs :main "mattsum.simple-example.core"
-         :ids #{"main"})
+   (cljs :ids #{"main"})
    (rn/after-cljsbuild :server-url "localhost:8081")
    (if (= :ios platform) (rn/print-ios-log :grep "SimpleExampleApp") identity)
    (if (= :android platform) (rn/print-android-log) identity)
