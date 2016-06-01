@@ -29,6 +29,6 @@ adb reverse tcp:9001 tcp:9001 # repl
 boot dev --platform android & #2>&1 1>/dev/null &
 appium & #2>&1 1>/dev/null &
 echo "Waiting for boot to start up"
-wait-for-url "http://localhost:8081/index.android.bundle?platform=android"
+wait-for-url "http://localhost:8081/main.bundle?platform=android"
 echo "Starting integration-tests.boot"
 ./integration-tests.boot

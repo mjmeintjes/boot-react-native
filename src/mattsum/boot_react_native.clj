@@ -38,6 +38,7 @@
         ;; Create the output dir in outer context allows us to cache the
         ;; compilation, which means we don't have to re-parse each file
         tmp-dir        (c/tmp-dir!)
+        cljs-dir (or cljs-dir "main.out")
         output-dir     (if cljs-dir
                          (doto (io/file tmp-dir cljs-dir)
                            io/make-parents)
@@ -233,26 +234,28 @@ require('" boot-main "');
   Native in the directory structure it expects, even as it's continually recompiled in a `watch`ed
   task pipeline."
   [output-dir work-dir fileset-diff]
-  (when-let [tmp-files (seq (c/by-re [(re-pattern (str "^\\Q" output-dir "\\E/main.js$"))
-                                      (re-pattern (str "^\\Q" output-dir "\\E/goog/base.js$"))
-                                      (re-pattern (str "^\\Q" output-dir "\\E/goog/net/jsloader.js$"))
-                                      (re-pattern (str "^\\Q" output-dir "\\E/node_modules/.*"))]
-                                     (c/output-files fileset-diff)))]
-    (util/info "Copying %d output files to React Native packager working directory %s.\n"
-               (count tmp-files) work-dir)
-    (doseq [tmp-file tmp-files]
-      (let [in-file  (c/tmp-file tmp-file)
-            relpath  (c/tmp-path tmp-file)
-            out-file (io/file work-dir (str/replace relpath (str output-dir "/") ""))]
-        (util/dbug "... copying %s\n" in-file)
-        (io/make-parents out-file)
-        (bf/hard-link in-file out-file)))))
+  (let [output-dir (or output-dir "main.out")]
+    (when-let [tmp-files (seq (c/by-re [(re-pattern (str "^\\Q" output-dir "\\E/main.js$"))
+                                        (re-pattern (str "^\\Q" output-dir "\\E/goog/base.js$"))
+                                        (re-pattern (str "^\\Q" output-dir "\\E/goog/net/jsloader.js$"))
+                                        (re-pattern (str "^\\Q" output-dir "\\E/node_modules/.*"))]
+                                       (c/output-files fileset-diff)))]
+      (util/info "Copying %d output files to React Native packager working directory %s.\n"
+                 (count tmp-files) work-dir)
+      (doseq [tmp-file tmp-files]
+        (let [in-file  (c/tmp-file tmp-file)
+              relpath  (c/tmp-path tmp-file)
+              out-file (io/file work-dir (str/replace relpath (str output-dir "/") ""))]
+          (util/dbug "... copying %s\n" in-file)
+          (io/make-parents out-file)
+          (bf/hard-link in-file out-file))))))
 
 (deftask start-rn-packager
   "Starts the React Native packager. Includes a custom transformer that skips transformation for ClojureScript generated files."
   [a app-dir APP str "The (relative) path to the React Native application"
    o output-dir OUT str "The cljs :output-dir"]
-  (let [app-dir     (or app-dir "app")
+  (let [output-dir  (or output-dir "main.out")
+        app-dir     (or app-dir "app")
         rn-work-dir (c/tmp-dir!)]
     (setup-rn-work-dir app-dir rn-work-dir)
 
