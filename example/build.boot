@@ -6,7 +6,7 @@
                  [mattsum/boot-react-native      "0.2-SNAPSHOT"             :scope "test"]
                  [adzerk/boot-cljs               "1.7.170-3"       :scope  "test"]
                  [adzerk/boot-cljs-repl          "0.3.0"           :scope  "test"]
-                 [adzerk/boot-reload             "0.4.2"           :scope  "test"]
+                 [adzerk/boot-reload             "0.4.8"           :scope  "test"]
                  [pandeiro/boot-http             "0.7.1-SNAPSHOT"  :scope  "test"]
                  [crisptrutski/boot-cljs-test    "0.2.1-SNAPSHOT"  :scope  "test"]
                  [com.cemerick/piggieback        "0.2.1"           :scope  "test"]
