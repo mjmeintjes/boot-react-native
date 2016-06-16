@@ -41,7 +41,7 @@
            :port 8079
            :ws-host "localhost"
            )
-   (rn/before-cljsbuild)
+   (rn/before-cljsbuild :id "main")
 
    (cljs-repl :ws-host "localhost"
               :port 9001
@@ -50,8 +50,7 @@
    (cljs :ids #{"main"})
    (rn/after-cljsbuild :server-url "localhost:8081")
    (if (= :ios platform) (rn/print-ios-log :grep "SimpleExampleApp") identity)
-   (if (= :android platform) (rn/print-android-log) identity)
-   (target :dir ["app/build"])))
+   (if (= :android platform) (rn/print-android-log) identity)))
 
 (deftask dev
   "Build app and watch for changes"
