@@ -1,1 +1,1 @@
-(cd .. && boot inst) && boot dev
+(cd .. && boot inst) && boot dev "$@"

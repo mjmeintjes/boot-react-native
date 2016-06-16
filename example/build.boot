@@ -6,7 +6,7 @@
                  [mattsum/boot-react-native      "0.2-SNAPSHOT"             :scope "test"]
                  [adzerk/boot-cljs               "1.7.170-3"       :scope  "test"]
                  [adzerk/boot-cljs-repl          "0.3.0"           :scope  "test"]
-                 [adzerk/boot-reload             "0.4.2"           :scope  "test"]
+                 [adzerk/boot-reload             "0.4.8"           :scope  "test"]
                  [pandeiro/boot-http             "0.7.1-SNAPSHOT"  :scope  "test"]
                  [crisptrutski/boot-cljs-test    "0.2.1-SNAPSHOT"  :scope  "test"]
                  [com.cemerick/piggieback        "0.2.1"           :scope  "test"]
@@ -40,8 +40,9 @@
    (reload :on-jsload 'mattsum.simple-example.core/on-js-reload
            :port 8079
            :ws-host "localhost"
+           :disable-hud true
            )
-   (rn/before-cljsbuild)
+   (rn/before-cljsbuild :id "main")
 
    (cljs-repl :ws-host "localhost"
               :port 9001
@@ -50,8 +51,7 @@
    (cljs :ids #{"main"})
    (rn/after-cljsbuild :server-url "localhost:8081")
    (if (= :ios platform) (rn/print-ios-log :grep "SimpleExampleApp") identity)
-   (if (= :android platform) (rn/print-android-log) identity)
-   (target :dir ["app/build"])))
+   (if (= :android platform) (rn/print-android-log) identity)))
 
 (deftask dev
   "Build app and watch for changes"
