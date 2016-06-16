@@ -40,6 +40,7 @@
    (reload :on-jsload 'mattsum.simple-example.core/on-js-reload
            :port 8079
            :ws-host "localhost"
+           :disable-hud true
            )
    (rn/before-cljsbuild :id "main")
 
