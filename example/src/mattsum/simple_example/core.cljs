@@ -17,11 +17,22 @@
 
 (defn root-view
   []
-  [view {:style {:margin-top 22, :margin-left 8}}
-   [touchable-highlight {:on-press (fn []
+  [view {:style {:margin-top 50
+                 :margin-left 8
+                 :justify-content "center"
+                 :align-items "center"}}
+   [text {:style {:font-family "Helvetica"
+                  :font-size 20
+                  :margin-bottom 20}}
+    "Welcome to boot-react-native"]
+   [touchable-highlight {:style {:padding 20
+                                 :background-color "#e0e0e0"}
+                         :on-press (fn []
                                      (swap! !state update :count inc))
-                         :underlay-color "#00ff00"}
-    [text (str "Count: " (:count @!state) ", click to increase")]]])
+                         :underlay-color "#f0f0f0"}
+    [text {:style {:font-family "Helvetica"
+                   :font-size 14}}
+     "Count: " (:count @!state) ", click to increase"]]])
 
 (defn root-container
   "Wraps root-view. This is to make sure live reloading using boot-reload and
