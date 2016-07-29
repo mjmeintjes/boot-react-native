@@ -10,7 +10,7 @@
 
 (require '[adzerk.bootlaces :refer :all]
          '[mattsum.boot-react-native])
-(def +version+ "0.1.20160729-SNAPSHOT")
+(def +version+ "0.3-SNAPSHOT")
 (bootlaces! +version+)
 
 (task-options!

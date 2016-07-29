@@ -3,7 +3,7 @@
  :resource-paths   #{"resources"}
  :exclusions ['cljsjs/react]
  :dependencies '[
-                 [org.clojars.pesterhazy/boot-react-native      "0.1.20160729-SNAPSHOT" :scope "test"]
+                 [org.clojars.pesterhazy/boot-react-native      "0.3-SNAPSHOT" :scope "test"]
                  [adzerk/boot-cljs               "1.7.228-1"       :scope  "test"]
                  [adzerk/boot-cljs-repl          "0.3.0"           :scope  "test"]
                  [adzerk/boot-reload             "0.4.2"           :scope  "test"]
