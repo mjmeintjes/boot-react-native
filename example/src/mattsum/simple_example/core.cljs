@@ -3,7 +3,6 @@
             [cljs.test :as test]))
 
 (enable-console-print!)
-(println "evaluating mattsum.simple-example.core...")
 
 ;; we need set! for advanced compilation
 
@@ -15,21 +14,20 @@
 (def touchable-highlight (r/adapt-react-class (.-TouchableHighlight js/React)))
 
 (defonce !state (r/atom {:count 0}))
-(println "after defonce:" (pr-str @!state))
-
 
 (defn root-view
   []
-  (println "root-view render:" (pr-str @!state))
   [view {:style {:margin-top 22, :margin-left 8}}
-   [text "asdf"]
    [touchable-highlight {:on-press (fn []
-                                     (println "before swap. state:" (pr-str @!state))
-                                     (swap! !state update :count inc)
-                                     (println "after swap. state:" (pr-str @!state)))
+                                     (swap! !state update :count inc))
                          :underlay-color "#00ff00"}
     [text (str "Count: " (:count @!state) ", click to increase")]]])
 
+(defn root-container
+  "Wraps root-view. This is to make sure live reloading using boot-reload and
+  reagent works as expected. Instead of editing root-container, edit root-view"
+  []
+  [root-view])
 
 (defn ^:export main
   []
@@ -37,15 +35,16 @@
   (enable-console-print!)
   (.registerComponent (.-AppRegistry react)
                       "SimpleExampleApp"
-                      #(r/reactify-component #'root-view)))
+                      #(r/reactify-component #'root-container)))
 
 (defn on-js-reload
   []
-  (println "on-js-reload. state:" (prn @!state))
+  (println "on-js-reload. state:" (pr-str @!state))
+
   ;; Force re-render
   ;;
   ;; In React native, there are no DOM nodes. Instead, mounted
   ;; components are identified by numbers. The first root components
   ;; is assigned the number 1.
 
-  (r/render #'root-view 1))
+  (r/render #'root-container 1))
