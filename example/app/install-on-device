@@ -1,1 +1,0 @@
-(cd android && ./gradlew installDebug "$@")

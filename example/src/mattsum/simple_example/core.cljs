@@ -1,43 +1,51 @@
 (ns mattsum.simple-example.core
-  (:require [reagent.core :as reag :refer [atom]]
+  (:require [reagent.core :as r]
             [cljs.test :as test]))
 
-#_(enable-console-print!)
+(enable-console-print!)
+(println "evaluating mattsum.simple-example.core...")
 
 ;; we need set! for advanced compilation
 
 (set! js/React (js/require "react-native/Libraries/react-native/react-native.js"))
 (defonce react (js/require "react-native/Libraries/react-native/react-native.js"))
 
-(def view (reag/adapt-react-class (.-View react)))
-(def text (reag/adapt-react-class (.-Text react)))
+(def view (r/adapt-react-class (.-View react)))
+(def text (r/adapt-react-class (.-Text react)))
+(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight js/React)))
 
-(defn testf
-  []
-  (println "TESTING")
-  "RETURN TESTING")
+(defonce !state (r/atom {:count 0}))
+(println "after defonce:" (pr-str @!state))
+
 
 (defn root-view
   []
-  [view
-   [text {:style {:margin-top 22, :margin-left 8}} "CHANGE THIS: HELLO WORLD"]])
+  (println "root-view render:" (pr-str @!state))
+  [view {:style {:margin-top 22, :margin-left 8}}
+   [text "asdf"]
+   [touchable-highlight {:on-press (fn []
+                                     (println "before swap. state:" (pr-str @!state))
+                                     (swap! !state update :count inc)
+                                     (println "after swap. state:" (pr-str @!state)))
+                         :underlay-color "#00ff00"}
+    [text (str "Count: " (:count @!state) ", click to increase")]]])
 
-(defn mount-root []
-  (reag/render [root-view] 1))
 
 (defn ^:export main
   []
-  (enable-console-print!)
   (js/console.log "MAIN")
+  (enable-console-print!)
   (.registerComponent (.-AppRegistry react)
                       "SimpleExampleApp"
-                      #(reag/reactify-component root-view)))
-
-(test/deftest testingt
-  (test/is (= 1 2) "ERROR"))
+                      #(r/reactify-component #'root-view)))
 
 (defn on-js-reload
   []
-  (test/run-tests)
-  (js/console.log "JS RELOADING")
-  (mount-root))
+  (println "on-js-reload. state:" (prn @!state))
+  ;; Force re-render
+  ;;
+  ;; In React native, there are no DOM nodes. Instead, mounted
+  ;; components are identified by numbers. The first root components
+  ;; is assigned the number 1.
+
+  (r/render #'root-view 1))

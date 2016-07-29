@@ -40,8 +40,6 @@
     (spit target-file new-content)))
 
 (defn new-hard-link [src target]
-  (when (fl/exists? target)
-    (fl/delete-file target))
   (fl/hard-link src target))
 
 (defn- get-all-dependency-mappings
@@ -86,8 +84,7 @@
                   ns]} files-to-process]
     (when source-file
       (io/make-parents target-file)
-      (add-provides-module-metadata source-file target-file ns)
-      (update-sourcemap-url target-file target-file ns)
+      (new-hard-link source-file target-file)
       (when (and (fl/exists? map-file)
                  (fl/exists? cljs-file))
         (new-hard-link map-file target-map)

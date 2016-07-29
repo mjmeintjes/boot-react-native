@@ -1,0 +1,23 @@
+From 3c555e109019da173fe90503e3470b31d0b2f178 Mon Sep 17 00:00:00 2001
+From: Paulus Esterhazy <pesterhazy@gmail.com>
+Date: Mon, 25 Jul 2016 23:30:06 +0200
+Subject: [PATCH] Recognize `goog.require` as dependency
+
+---
+ .../react-packager/src/JSTransformer/worker/extract-dependencies.js    | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/packager/react-packager/src/JSTransformer/worker/extract-dependencies.js b/packager/react-packager/src/JSTransformer/worker/extract-dependencies.js
+index 4e1bfb3..4cb0e06 100644
+--- a/packager/react-packager/src/JSTransformer/worker/extract-dependencies.js
++++ b/packager/react-packager/src/JSTransformer/worker/extract-dependencies.js
+@@ -35,7 +35,8 @@ function extractDependencies(code) {
+       const node = path.node;
+       const callee = node.callee;
+       const arg = node.arguments[0];
+-      if (callee.type !== 'Identifier' || callee.name !== 'require' || !arg || arg.type !== 'StringLiteral') {
++      if (!((callee.type === 'Identifier' && callee.name === 'require' && arg && arg.type === 'StringLiteral') ||
++            (callee.type === 'MemberExpression' && callee.object && callee.object.name === "goog" && callee.property && callee.property.name == "require" && arg && arg.type === 'StringLiteral'))) {
+         return;
+       }
+       dependencyOffsets.push(arg.start);

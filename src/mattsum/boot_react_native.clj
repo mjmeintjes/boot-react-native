@@ -247,9 +247,9 @@ require('" boot-main "');
 (deftask before-cljsbuild
   []
   (comp (shim-browser-repl-bootstrap)
-     (shim-boot-reload)
-     (shim-repl-print)
-     ))
+        (shim-boot-reload)
+        (shim-repl-print)
+        ))
 
 (deftask after-cljsbuild
   [o output-dir OUT str  "The cljs :output-dir"
