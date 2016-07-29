@@ -23,7 +23,7 @@
                  :align-items "center"}}
    [text {:style {:font-family "Helvetica"
                   :font-size 20
-                  :margin-bottom 20}}
+                  :margin-bottom 25}}
     "Welcome to boot-react-native"]
    [touchable-highlight {:style {:padding 20
                                  :background-color "#e0e0e0"}
