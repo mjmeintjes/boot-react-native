@@ -258,8 +258,7 @@ require('" boot-main "');
    A app-dir OUT str  "The (relative) path to the React Native application"]
   (comp (react-native-devenv :output-dir output-dir
                              :asset-path asset-path
-                             :server-url server-url)
-        (start-rn-packager :app-dir app-dir)))
+                             :server-url server-url)))
 
 (deftask run-in-simulator
   "Run the app in the simulator"
