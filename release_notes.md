@@ -1,17 +1,21 @@
-# Changelog
-## v0.3
+# Release Notes
+
+## 0.3-SNAPSHOT
+
+This release brings compatibility with current React Native versions.
+
 * Added compatibility with recent react-native (>= 0.23.0)
 * Update included SimpleExampleApp to react-native 0.30.0. Please refer to the
   `example/` folder for how to set up `boot-react-native`.
-* BREAKING: disable sourcemap support temporarily (see
-  https://github.com/mjmeintjes/boot-react-native/issues/58) The feature will be
-  added back in soon.
 * BREAKING: due to changes to the react-native packager, a patch needs to be
   applied manually to the react-native npm module. E.g. for the example app,
 
   ```
   patch -d app/node_modules/react-native -p1 < rn-goog-require.patch
   ```
+* BREAKING: disabled sourcemap support temporarily (see
+  https://github.com/mjmeintjes/boot-react-native/issues/58) The feature will be
+  added back in.
 * BREAKING: if you see "Reload websocket error" on Android, the reason is most
   likely that reverse port mapping is not enabled in your emulator.
 
@@ -34,7 +38,10 @@
   `package.json` (in addtion to `react` and with the same version number as
   `react`).
 
-## v0.2
+* Add audible notification for example application
+
+## 0.2-SNAPSHOT
+
 * Sourcemap support added (thanks @scttnlsn)
 * Tested and working on iOS (@pesterhazy, @jellea)
 * Build and run app in iOS simulator directly - without xcode (@pesterhazy)
