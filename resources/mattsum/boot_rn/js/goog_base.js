@@ -28,29 +28,19 @@ if (typeof global !== 'undefined') {
         }
         goog.exportPath_(name);
     };
-    //Replace goog.require with react-native's implementation, skip errors, because there are going to be some (e.g. missing 'soft' depedencies) and we don't care about them
+
     var orig_require = goog.require;
-    goog.require = function(name) {
-        var oldErrorReporter = global.ErrorUtils.reportFatalError;
-        //disable React error checking while we try to require
-        //because we want to be able to try goog.require as well
-        global.ErrorUtils.reportFatalError = function(e) { throw new Exception(e);};
-        try {
-            require(name);
-        } catch (e) {
-            //Try default goog.require behaviour
-            var oldDebugLoader = goog.ENABLE_DEBUG_LOADER;
-            goog.ENABLE_DEBUG_LOADER = true;
-            try {
-                orig_require.call(goog, name);
-            } catch (e) {
-                console.warn("Error while loading " + name);
-                console.error(e);
-            } finally {
-                goog.ENABLE_DEBUG_LOADER = oldDebugLoader;
-            }
-        } finally {
-            global.ErrorUtils.reportFatalError = oldErrorReporter; 
+    goog.require = function(moduleId) {
+        if ( typeof moduleId === 'number' ) {
+            // If a numberic moduleId is passed, the module was transformed by
+            // the RN packager, replacing the string with a unique id. In this
+            // case we want to require the id using the RN packager.
+
+            require(moduleId);
+        }
+        else {
+            console.log("goog.require: " + moduleId);
+            orig_require(moduleId);
         }
     };
 }
