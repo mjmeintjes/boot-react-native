@@ -6,28 +6,29 @@ Provides several tasks that helps integrate ClojureScript with the React Native 
 
 ** Note on version 0.3
 
-**NOTE**: Boot React Native is being prepared for its upcoming `0.3` release. Changes in latest `master` bring usability improvements as well as compatibility with the current release of React Native, so please try version `0.3`. There are also breaking changes; please refer to the [[https://github.com/mjmeintjes/boot-react-native/blob/master/release_notes.md][release notes]] for important upgrade notes.
+*NOTE*: Boot React Native is being prepared for its upcoming =0.3= release. Changes in latest =master= bring usability improvements as well as compatibility with the current release of React Native, so please try version =0.3=. There are also breaking changes; please refer to the [[https://github.com/mjmeintjes/boot-react-native/blob/master/release_notes.md][release notes]] for important upgrade notes.
 
-Also check [Getting Started with Boot React Native `0.3`](http://presumably.de/boot-react-native.html).
+A guide to =0.3= is also available at [[http://presumably.de/boot-react-native.html][Getting Started with Boot React Native]].
 
 ** Why?
 React Native and ClojureScript seem to be made for each other. Unfortunately, out of the box ClojureScript does not play nice with React Native.
 
 
 Basically, trying to get them to work together leads to the following problems:
- * You have to set up the cljs compiler to use :optimizations :whitespace or higher - this leads to slow compilation (more than 30 seconds after each change on my PC)
- * boot-reload and boot-cljs-repl tasks do not work
- * You have to start up the React Native packager in a separate terminal
+  * You have to set up the cljs compiler to use :optimizations :whitespace or higher - this leads to slow compilation (more than 30 seconds after each change on my PC)
+  * boot-reload and boot-cljs-repl tasks do not work
+  * You have to start up the React Native packager in a separate terminal
 
 This library aims to fix all of the above. It:
- * Allows for builds with :optimizations :none - much faster builds, and 1-2 second rebuilds
- * Allows for integration with other cljs boot tasks - cljs-repl, reload, cljs-test
- * Provides tasks to auto start react native packager
- * Custom transformer for react-native to speed up builds significantly
- * Capture Android and iOS log output and print to command line
- * Run iOS application directly from command line (without starting up xcode)
- * Source map support
- * Experimental support for creating bundle for building distributable app (currently iOS only, needs more testing)
+  * Allows for builds with :optimizations :none - much faster builds, and 1-2 second rebuilds
+  * Allows for integration with other cljs boot tasks - cljs-repl, reload, cljs-test
+  * Provides tasks to auto start react native packager
+  * Custom transformer for react-native to speed up builds significantly
+  * Capture Android and iOS log output and print to command line
+  * Run iOS application directly from command line (without starting up xcode)
+  * Source map support
+  * Experimental support for creating bundle for building distributable app (currently iOS only, needs more testing)
+
 ** Getting started
 To get started, simply add the tasks =(before-cljsbuild)= to your build pipeline somewhere before =(cljs)=, and =(after-cljsbuild)= to somewhere after =(cljs)=.
 
