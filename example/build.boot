@@ -36,7 +36,6 @@
   []
   (assert (or (nil? platform) (#{:ios :android} platform)))
   (comp
-   (if (= :ios platform) (rn/run-in-simulator) identity)
    (reload :on-jsload 'mattsum.simple-example.core/on-js-reload
            :port 8079
            :ws-host "localhost"
@@ -51,8 +50,6 @@
    (cljs :main "mattsum.simple-example.core"
          :ids #{"main"})
    (rn/after-cljsbuild :server-url "localhost:8081")
-   (if (= :ios platform) (rn/print-ios-log) identity)
-   (if (= :android platform) (rn/print-android-log) identity)
    (target :dir ["app/build"])))
 
 (deftask dev
