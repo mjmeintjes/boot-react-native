@@ -220,12 +220,16 @@
     (copy-file fname temppath)
     (binding [util/*sh-dir* "app"]
       (try
-        (util/dosh "node" cli
+        (let [cmd ["node"
+                   "--max_old_space_size=4096"
+                   cli
                    "bundle" "--platform" "ios"
                    "--dev" "true"
                    "--entry-file" tempfname
                    "--bundle-output" (.getAbsolutePath outf)
-                   "--assets-dest" (.getAbsolutePath outd))
+                   "--assets-dest" (.getAbsolutePath outd)]]
+          (util/dbug "Bundling command: %s\n" (clojure.string/join " " cmd))
+          (apply util/dosh cmd))
         (finally
           (util/dosh "rm" "-f" tempfname))))))
 
