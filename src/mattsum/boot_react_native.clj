@@ -118,26 +118,6 @@ require('" boot-main "');
                                  :output-file "goog/base.js"
                                  :action :prepend)))
 
-
-(deftask shim-boot-reload
-  []
-  (let [ns 'mattsum.boot-react-native.shim-boot-reload
-        temp (template
-              ((ns ~ns
-                 (:require [adzerk.boot-reload.display :as display]
-                           [adzerk.boot-reload.reload :as reload]))
-               (let [no-op (fn [& args] ())
-                     pr (fn [& args] (println args))]
-                 (aset js/adzerk.boot_reload.display "display" pr)
-                 (aset js/adzerk.boot_reload.reload "reload_html" no-op)
-                 (aset js/adzerk.boot_reload.reload "reload_css" no-op)
-                 (aset js/adzerk.boot_reload.reload "reload_img" no-op))))]
-    (c/with-pre-wrap fileset
-      (bh/add-cljs-template-to-fileset fileset
-                                       nil
-                                       ns
-                                       temp))))
-
 (deftask shim-repl-print
   "Weasel's repl-print function does not work in React Native
    TODO: Add PR for changing this function in Weasel code"
@@ -251,7 +231,6 @@ require('" boot-main "');
      (util/info "Boot React Native: shimming...\n")
      fileset)
    (shim-browser-repl-bootstrap)
-   (shim-boot-reload)
    (shim-repl-print)
    ))
 
