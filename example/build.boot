@@ -32,9 +32,7 @@
  )
 
 (deftask build
-  [p platform PLATFORM kw "The platform to target (ios or android)"]
   []
-  (assert (or (nil? platform) (#{:ios :android} platform)))
   (comp
    (reload :on-jsload 'mattsum.simple-example.core/on-js-reload
            :port 8079
@@ -50,18 +48,10 @@
 
 (deftask dev
   "Build app and watch for changes"
-  [p platform PLATFORM kw "The platform to target (ios or android)"]
+  []
   []
   (comp (watch)
-        (if platform (build :platform platform) (build))))
-
-(deftask packager
-  []
-  (watch)
-  (rn/start-rn-packager))
-
-(defn ^:private file-by-path [path fileset]
-  (b/tmp-file (get (:tree fileset) path)))
+        (build)))
 
 (deftask dist
   "Build a distributable bundle of the app"
