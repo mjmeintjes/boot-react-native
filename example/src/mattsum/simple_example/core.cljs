@@ -9,9 +9,19 @@
 (set! js/React (js/require "react-native/Libraries/react-native/react-native.js"))
 (defonce react (js/require "react-native/Libraries/react-native/react-native.js"))
 
+;; Assets need to be relative path, starting from the `app/build/node_modules'
+;; directory. The packager only finds images located in the `app/' folder
+;; (the directory that contains package.json) or below.
+;;
+;; We use `defonce' to prevent errors on subsequent reloads.
+
+(defonce logo (js/require "../../assets/cljs.png"))
+
 (def view (r/adapt-react-class (.-View react)))
 (def text (r/adapt-react-class (.-Text react)))
-(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight js/React)))
+(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight react)))
+(def image (r/adapt-react-class (.-Image react)))
+
 
 (defonce !state (r/atom {:count 0}))
 
@@ -23,8 +33,12 @@
                  :align-items "center"}}
    [text {:style {:font-family "Helvetica"
                   :font-size 20
-                  :margin-bottom 25}}
+                  :margin-bottom 20}}
     "Welcome to boot-react-native"]
+   [image {:style {:width 350
+                   :height 348
+                   :margin-bottom 20}
+           :source logo}]
    [touchable-highlight {:style {:padding 20
                                  :background-color "#e0e0e0"}
                          :on-press (fn []
