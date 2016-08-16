@@ -38,17 +38,13 @@
   (comp
    (reload :on-jsload 'mattsum.simple-example.core/on-js-reload
            :port 8079
-           :ws-host "localhost"
-           )
+           :ws-host "localhost")
    (rn/before-cljsbuild)
-
    (cljs-repl :ws-host "localhost"
               :port 9001
               :ip "0.0.0.0")
-
    (speak)
-   (cljs :main "mattsum.simple-example.core"
-         :ids #{"main"})
+   (cljs :ids #{"main"})
    (rn/after-cljsbuild :server-url "localhost:8081")
    (target :dir ["app/build"])))
 
