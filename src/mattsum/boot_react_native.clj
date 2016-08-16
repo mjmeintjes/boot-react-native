@@ -44,11 +44,11 @@
             src-dir       (str (or cljs-dir "main.out") "/")]
         (reset! previous-files fileset)
 
-        (util/info "Compiling {cljs-deps}... %d changed files\n" (count new-files) )
+        (util/dbug "Compiling {cljs-deps}... %d changed files\n" (count new-files) )
         (let [files-to-process (get-files-to-process deps-files fileset output-dir src-dir)]
           (setup-links-for-dependency-map files-to-process))
 
-        (util/info "Adding %s to fileset\n" output-dir)
+        (util/dbug "Adding %s to fileset\n" output-dir)
         (-> fileset
             (c/add-resource output-dir)
             c/commit!)))))
@@ -246,17 +246,24 @@ require('" boot-main "');
 
 (deftask before-cljsbuild
   []
-  (comp (shim-browser-repl-bootstrap)
-        (shim-boot-reload)
-        (shim-repl-print)
-        ))
+  (comp
+   (c/with-pre-wrap fileset
+     (util/info "Boot React Native: shimming...\n")
+     fileset)
+   (shim-browser-repl-bootstrap)
+   (shim-boot-reload)
+   (shim-repl-print)
+   ))
 
 (deftask after-cljsbuild
   [o output-dir OUT str  "The cljs :output-dir"
    a asset-path PATH str "The (optional) asset-path. Path relative to React Native app where main.js is stored."
    s server-url SERVE str "The (optional) IP address and port for the websocket server to listen on."
    A app-dir OUT str  "The (relative) path to the React Native application"]
-  (comp (react-native-devenv :output-dir output-dir
+  (comp (c/with-pre-wrap fileset
+          (util/info "Boot React Native: setting up dev environment...\n")
+          fileset)
+        (react-native-devenv :output-dir output-dir
                              :asset-path asset-path
                              :server-url server-url)))
 

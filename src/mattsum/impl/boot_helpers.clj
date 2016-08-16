@@ -12,7 +12,6 @@
 
 (defn read-resource-
   [src]
-  (println "Reading resource - " src)
   (->> src io/resource slurp))
 
 ;; For some reason Clojure/boot doesn't like us reading from the jar file too often,
@@ -40,7 +39,6 @@
   the new fileset"
   ([fileset path modify-fn] (modify-file fileset path modify-fn {}))
   ([fileset path modify-fn replacements]
-   (println "Modifying " path " using " modify-fn)
    (let [tmp (c/tmp-dir!)
          out-file (make-absolute tmp path)]
      (let [base-file (->> path
@@ -58,7 +56,7 @@
        (-> fileset
            (c/add-resource tmp)
            ))))
-)
+  )
 
 (defn append-to-file
   [fileset path content replacements]
@@ -106,7 +104,7 @@
   (let [out-dir (c/tmp-dir!)
         out-file (io/file out-dir out-relative-path)]
     (io/make-parents out-file)
-    (util/info "Writing cljs-template to %s...\n" (.getName out-file))
+    (util/dbug "Writing cljs-template to %s...\n" (.getName out-file))
     (->> cljs-template
          (map pr-str)
          (interpose "\n")
@@ -124,7 +122,7 @@
   [ns edn-in-file out-file]
   (let [spec (-> edn-in-file slurp read-string)]
     (when (not= :nodejs (-> spec :compiler-options :target))
-      (util/info "Adding :require %s to %s...\n" ns (.getName edn-in-file))
+      (util/dbug "Adding :require %s to %s\n" ns (.getName edn-in-file))
       (io/make-parents out-file)
       (-> spec
           (update-in [:require] conj ns)
@@ -143,7 +141,6 @@
 (defn add-cljs-require-to-edn-files
   [fileset ids ns]
   (let [tmp (c/tmp-dir!)]
-    (println "Found edn files - " (get-cljs-edn-files fileset ids))
     (doseq [edn-file (get-cljs-edn-files fileset ids)]
       (let [path (c/tmp-path edn-file)
             edn-file (c/tmp-file edn-file)
@@ -212,10 +209,10 @@
                 .getAbsolutePath)
         dir (-> in .getAbsoluteFile .getParent)
         fname (-> in .getAbsolutePath)]
-    (util/info "Bundling %s...\n" fname)
+    (util/dbug "Bundling %s...\n" fname)
     ;; create nested temp directory
     ;; we need this in order to keep the react packager happy
-    (util/info "Creating temp dir: %s\n" (.getAbsolutePath tempdirf))
+    (util/dbug "Creating temp dir: %s\n" (.getAbsolutePath tempdirf))
     (.mkdirs tempdirf)
     (copy-file fname temppath)
     (binding [util/*sh-dir* "app"]
