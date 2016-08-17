@@ -1,6 +1,6 @@
 # Release Notes
 
-## 0.3-SNAPSHOT
+## 0.3
 
 This release brings compatibility with current React Native versions.
 
@@ -8,11 +8,14 @@ This release brings compatibility with current React Native versions.
 * Update included SimpleExampleApp to react-native 0.30.0. Please refer to the
   `example/` folder for how to set up `boot-react-native`.
 * BREAKING: due to changes to the react-native packager, a patch needs to be
-  applied manually to the react-native npm module. E.g. for the example app,
+  applied to the react-native npm module. To do this manually for the example app,
 
   ```
   patch -d app/node_modules/react-native -p1 < rn-goog-require.patch
   ```
+
+  You can also use the new `patch-rn` task, which automatically patches
+  the npm module.
 * BREAKING: disabled sourcemap support temporarily (see
   https://github.com/mjmeintjes/boot-react-native/issues/58) The feature will be
   added back in.

@@ -3,7 +3,7 @@
  :resource-paths   #{"resources"}
  :exclusions ['cljsjs/react]
  :dependencies '[
-                 [mattsum/boot-react-native      "0.3-SNAPSHOT" :scope "test"]
+                 [boot-react-native/boot-react-native      "0.3" :scope "test"]
                  [adzerk/boot-cljs               "1.7.228-1"       :scope  "test"]
                  [adzerk/boot-cljs-repl          "0.3.3"           :scope  "test"]
                  [adzerk/boot-reload             "0.4.12"          :scope  "test"]

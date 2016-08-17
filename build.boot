@@ -1,20 +1,14 @@
 (set-env!
  :source-paths   #{"src"}
  :resource-paths #{"resources"}
- :dependencies '[
-                 [adzerk/bootlaces "0.1.10" :scope "test"]
-                 [pandeiro/boot-http "0.7.1-SNAPSHOT"  :scope  "test"]
+ :dependencies '[[pandeiro/boot-http "0.7.1-SNAPSHOT"  :scope  "test"]
                  [com.cemerick/url "0.1.1"]
-                 [me.raynes/conch "0.8.0"]
-                 ])
+                 [me.raynes/conch "0.8.0"]])
 
-(require '[adzerk.bootlaces :refer :all]
-         '[mattsum.boot-react-native])
-(def +version+ "0.3-SNAPSHOT")
-(bootlaces! +version+)
+(def +version+ "0.3-rc1")
 
 (task-options!
- pom {:project 'mattsum/boot-react-native
+ pom {:project 'boot-react-native/boot-react-native
       :version +version+
       :description "Boot tasks to integrate ClojureScript boot tasks (reload, repl, cljs-build) with React Native packager"
       :url "https://github.com/mjmeintjes/boot-react-native"
@@ -22,16 +16,21 @@
       :license {"Eclipse Public License"
                 "http://www.eclipse.org/legal/epl-v10.html"}})
 
-(deftask inst []
-  (comp (pom)
-     (jar)
-     (install)))
+(set-env! :repositories [["clojars" (cond-> {:url "https://clojars.org/repo/"}
+                                      (System/getenv "CLOJARS_USER")
+                                      (merge {:username (System/getenv "CLOJARS_USER")
+                                              :password (System/getenv "CLOJARS_PASS")}))]])
+
+(deftask build []
+  (comp
+   (pom) (jar) (install)))
 
 (deftask dev []
   "Continuously build jar and install to local maven repository"
   (comp (watch)
-     (inst)))
+        (build)))
 
 (deftask deploy []
-  (comp (build-jar)
-     (push-snapshot)))
+  (comp (build)
+        (push :repo "clojars"
+              :gpg-sign false #_(not (.endsWith +version+ "-SNAPSHOT")))))
