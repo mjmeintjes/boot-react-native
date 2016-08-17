@@ -27,6 +27,8 @@
  '[mattsum.boot-react-native    :as     rn :refer [patch-rn]]
  )
 
+(task-options! patch-rn {:app-dir "app"})
+
 (deftask build
   []
   (comp
@@ -45,13 +47,15 @@
 (deftask dev
   "Build app and watch for changes"
   []
-  (comp (watch)
+  (comp (patch-rn)
+        (watch)
         (build)))
 
 (deftask dist
   "Build a distributable bundle of the app"
   []
   (comp
+   (patch-rn)
    (cljs :ids #{"dist"})
    (rn/bundle :files {"dist.js" "main.jsbundle"})
    (target :dir ["app/dist"])))

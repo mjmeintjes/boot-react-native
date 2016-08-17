@@ -289,16 +289,21 @@ checks if the patch has already been applied and, if so, skips it silently. As a
 result it can be safely run on every build.
 
 See https://github.com/mjmeintjes/boot-react-native/issues/49"
-  [a app-dir OUT str  "Path to the React Native application (containing package.json)"]
+  [a app-dir OUT str  "Path to the React Native app-dir containing package.json"]
   (let [app-dir (or app-dir "app")]
     (c/with-pre-wrap fileset
       (let [path (bh/write-resource-to-path "patch-rn.sh" "patch-rn.sh")
             path2 (bh/write-resource-to-path "rn-goog-require.patch" "rn-goog-require.patch")]
         (util/info "Checking if React Native needs to be patched...\n")
+        (assert (-> (str app-dir "/package.json") io/as-file .exists)
+                (str "Did not find expected file package.json in " app-dir))
+        (assert (-> (str app-dir "/node_modules/react-native") io/as-file .exists)
+                (str "Did not find expected directory node_modules/react-native in " app-dir
+                     ". Did you run `npm install?'"))
         (try
           (util/dosh "bash" (str path "/patch-rn.sh") (str path2 "/rn-goog-require.patch") app-dir)
           (catch Exception e
-            (util/warn "Could not patch React Native in app-dir `%s'. Did you try to run `npm install'?\n"
+            (util/warn "Could not patch React Native in app-dir `%s'. Possibly incompatible version of react-native?\n"
                        app-dir)
             (throw e)))
         fileset))))
