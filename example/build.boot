@@ -24,7 +24,7 @@
  '[boot.core                    :as     b]
  '[boot.util                    :as     u]
  '[clojure.string               :as     s]
- '[mattsum.boot-react-native    :as     rn]
+ '[mattsum.boot-react-native    :as     rn :refer [patch-rn]]
  )
 
 (deftask build
@@ -44,7 +44,6 @@
 
 (deftask dev
   "Build app and watch for changes"
-  []
   []
   (comp (watch)
         (build)))

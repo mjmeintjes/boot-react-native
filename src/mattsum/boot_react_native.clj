@@ -278,3 +278,27 @@ require('" boot-main "');
           (clojure.java.io/make-parents out)
           (bh/bundle* in out tmp)))
       (-> fileset (c/add-resource tmp) c/commit!))))
+
+(deftask patch-rn
+  "Patch the node module `react-native' to recognize goog.require as a dependency
+
+Currently works with react-native >= 0.29.0
+
+Note that you will need to `npm install' before calling this task. The task
+checks if the patch has already been applied and, if so, skips it silently. As a
+result it can be safely run on every build.
+
+See https://github.com/mjmeintjes/boot-react-native/issues/49"
+  [a app-dir OUT str  "Path to the React Native application (containing package.json)"]
+  (let [app-dir (or app-dir "app")]
+    (c/with-pre-wrap fileset
+      (let [path (bh/write-resource-to-path "patch-rn.sh" "patch-rn.sh")
+            path2 (bh/write-resource-to-path "rn-goog-require.patch" "rn-goog-require.patch")]
+        (util/info "Checking if React Native needs to be patched...\n")
+        (try
+          (util/dosh "bash" (str path "/patch-rn.sh") (str path2 "/rn-goog-require.patch") app-dir)
+          (catch Exception e
+            (util/warn "Could not patch React Native in app-dir `%s'. Did you try to run `npm install'?\n"
+                       app-dir)
+            (throw e)))
+        fileset))))

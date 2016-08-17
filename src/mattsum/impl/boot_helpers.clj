@@ -86,7 +86,7 @@
   (let [tmp (c/tmp-dir!)
         out-file (io/file tmp output-path)
         resource-content (read-resource resource-path)]
-    (println "Writing " resource-path " to " out-file)
+    (util/dbug "Writing %s to %s" resource-path out-file)
     (doto out-file
       io/make-parents
       (spit resource-content))
