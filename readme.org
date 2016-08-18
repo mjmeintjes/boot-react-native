@@ -1,6 +1,6 @@
 * Boot React Native
 
-[[https://clojars.org/mattsum/boot-react-native][https://img.shields.io/clojars/v/mattsum/boot-react-native.svg]]
+[[https://clojars.org/boot-react-native][https://img.shields.io/clojars/v/boot-react-native.svg]]
 
 Provides several tasks that helps integrate ClojureScript with the React Native packager and build process
 
