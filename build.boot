@@ -1,11 +1,10 @@
 (set-env!
- :source-paths   #{"src"}
- :resource-paths #{"resources"}
+ :resource-paths #{"src" "resources"}
  :dependencies '[[pandeiro/boot-http "0.7.1-SNAPSHOT"  :scope  "test"]
                  [com.cemerick/url "0.1.1"]
                  [me.raynes/conch "0.8.0"]])
 
-(def +version+ "0.3-rc1")
+(def +version+ "0.3-rc2")
 
 (task-options!
  pom {:project 'boot-react-native/boot-react-native
@@ -22,8 +21,9 @@
                                               :password (System/getenv "CLOJARS_PASS")}))]])
 
 (deftask build []
-  (comp
-   (pom) (jar) (install)))
+  (comp (pom)
+        (jar)
+        (install)))
 
 (deftask dev []
   "Continuously build jar and install to local maven repository"
