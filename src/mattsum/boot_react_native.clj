@@ -57,18 +57,19 @@
 
 (deftask replace-main
   "Replaces the main.js with a file that can be read by React Native's packager"
-  [o output-dir OUT str  "The cljs :output-dir"]
+  [o output-dir OUT str  "The cljs :output-dir"
+   _ output-to OUT str "The cljs :output-to"]
   (let []
     (with-pre-wrap fileset
       (let [out-dir (str (or output-dir "main.out") "/")
             tmp (c/tmp-dir!)
-            main-file (->> "main.js"
+            main-file (->> (or output-to "main.js")
                            (find-file fileset))
             boot-main (->> main-file
                            slurp
                            (re-find #"(boot.cljs.\w+)\""))
             boot-main (get boot-main 1)
-            out-file (io/file tmp "main.js")
+            out-file (io/file tmp (or output-to "main.js"))
             new-script (str "
 var CLOSURE_UNCOMPILED_DEFINES = null;
 require('./" out-dir "goog/base.js');
@@ -142,6 +143,7 @@ require('" boot-main "');
 
 (deftask react-native-devenv
   [o output-dir OUT str  "The cljs :output-dir"
+   _ output-to  OUT str  "The cljs :output-to"
    a asset-path PATH str "The (optional) asset-path. Path relative to React Native app where main.js is stored."
    s server-url SERVE str "The (optional) IP address and port for the websocket server to listen on."]
 
@@ -149,8 +151,9 @@ require('" boot-main "');
      (shim-goog-reloading :output-dir output-dir
                           :asset-path asset-path
                           :server-url server-url)
-     (link-goog-deps)
-     (replace-main)
+     (link-goog-deps :cljs-dir output-dir)
+     (replace-main :output-dir output-dir
+                   :output-to output-to)
      ))
 
 (deftask print-android-log
@@ -236,6 +239,7 @@ require('" boot-main "');
 
 (deftask after-cljsbuild
   [o output-dir OUT str  "The cljs :output-dir"
+   _ output-to OUT str "The cljs :output-to"
    a asset-path PATH str "The (optional) asset-path. Path relative to React Native app where main.js is stored."
    s server-url SERVE str "The (optional) IP address and port for the websocket server to listen on."
    A app-dir OUT str  "The (relative) path to the React Native application"]
@@ -243,6 +247,7 @@ require('" boot-main "');
           (util/info "Boot React Native: setting up dev environment...\n")
           fileset)
         (react-native-devenv :output-dir output-dir
+                             :output-to output-to
                              :asset-path asset-path
                              :server-url server-url)))
 
