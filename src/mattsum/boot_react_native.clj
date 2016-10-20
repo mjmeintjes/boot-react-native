@@ -228,6 +228,7 @@ require('" boot-main "');
                                        temp))))
 
 (deftask before-cljsbuild
+    "Phase that needs to be inserted in the boot pipeline before the cljs task"
   []
   (comp
    (c/with-pre-wrap fileset
@@ -238,6 +239,9 @@ require('" boot-main "');
    ))
 
 (deftask after-cljsbuild
+  "Phase that needs to be inserted in the boot pipeline after the cljs task
+  
+For the output-dir and output-to options, see the ClojureScript compiler options."
   [o output-dir OUT str  "The cljs :output-dir"
    _ output-to OUT str "The cljs :output-to"
    a asset-path PATH str "The (optional) asset-path. Path relative to React Native app where main.js is stored."
