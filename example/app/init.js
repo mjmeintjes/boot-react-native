@@ -11,4 +11,3 @@
 global.ReactDOM = require('react-native');
 
 require('./build/main.js');
-mattsum.simple_example.core.main();
