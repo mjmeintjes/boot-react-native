@@ -39,7 +39,6 @@
    (cljs-repl :ws-host "localhost"
               :port 9001
               :ip "0.0.0.0")
-   (speak)
    (cljs :ids #{"main"})
    (rn/after-cljsbuild :server-url "localhost:8081")
    (target :dir ["app/build"])))
@@ -49,7 +48,8 @@
   []
   (comp (patch-rn)
         (watch)
-        (build)))
+        (build)
+        (speak)))
 
 (deftask dist
   "Build a distributable bundle of the app"
