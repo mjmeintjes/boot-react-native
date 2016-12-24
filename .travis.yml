@@ -1,8 +1,7 @@
 sudo: false
 os: osx
+osx_image: xcode8.2
 language: java
-jdk:
-    - oraclejdk8
 install:
   - mkdir -p ~/bin
   - export PATH=~/bin:$PATH
