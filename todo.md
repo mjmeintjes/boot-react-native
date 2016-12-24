@@ -1,1 +1,0 @@
-- re-enable speak or notify?

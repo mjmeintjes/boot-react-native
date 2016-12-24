@@ -48,7 +48,8 @@
   []
   (comp (patch-rn)
         (watch)
-        (build)))
+        (build)
+        (speak)))
 
 (deftask dist
   "Build a distributable bundle of the app"

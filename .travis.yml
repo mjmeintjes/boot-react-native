@@ -13,4 +13,4 @@ cache:
   - $HOME/.boot/cache/lib
   - $HOME/bin
 
-script: boot inst && cd example && boot build
+script: boot build && cd example && boot build
