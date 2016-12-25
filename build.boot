@@ -1,8 +1,11 @@
-(set-env!
- :resource-paths #{"src" "resources"}
- :dependencies '[[pandeiro/boot-http "0.7.1-SNAPSHOT"  :scope  "test"]
-                 [com.cemerick/url "0.1.1"]
-                 [me.raynes/conch "0.8.0"]])
+(set-env! :resource-paths #{"src"}
+          :dependencies '[[pandeiro/boot-http "0.7.1-SNAPSHOT" :scope  "test"]
+                          [com.cemerick/url "0.1.1"]
+                          [me.raynes/conch "0.8.0"]
+                          [org.clojure/clojure "1.8.0" :scope "provided"]]
+          :repositories
+          (partial map (fn [[k v]] [k (cond-> v (#{"clojars"} k) (assoc :username (System/getenv "CLOJARS_USER"),
+                                                                        :password (System/getenv "CLOJARS_PASS")))])))
 
 (def +version+ "0.3-rc2")
 
@@ -14,11 +17,6 @@
       :scm {:url "https://github.com/mjmeintjes/boot-react-native"}
       :license {"Eclipse Public License"
                 "http://www.eclipse.org/legal/epl-v10.html"}})
-
-(set-env! :repositories [["clojars" (cond-> {:url "https://clojars.org/repo/"}
-                                      (System/getenv "CLOJARS_USER")
-                                      (merge {:username (System/getenv "CLOJARS_USER")
-                                              :password (System/getenv "CLOJARS_PASS")}))]])
 
 (deftask build []
   (comp (pom)
