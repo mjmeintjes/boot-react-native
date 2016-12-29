@@ -1,9 +1,13 @@
 (ns mattsum.impl.goog-deps
   (:require [boot
+             [core :as c]
+             [util :as u]
              [file :as fl]]
             [clojure.java.io :as io]
             [clojure.string :as s]
             [mattsum.impl.boot-helpers :refer [find-file]]))
+
+(def output-dir "cljs_output")
 
 (defn split-line [line]
   (when-let [res (re-find #"[\"|'](.*?)[\"|'],\s(\[\'.*?\'\])" line)]
@@ -54,15 +58,16 @@
    that can be used the set up files in directory structure that React Native can use"
   [dependency-maps fileset tmp-dir src-dir]
   (map (fn [{:keys [ns path]}]
-         {:target-file (io/file (str tmp-dir "/node_modules") ns)
+         {:target-file (io/file (str tmp-dir "/" output-dir) ns)
           :source-file (some->> (str src-dir path)
                                 (find-file fileset))
           :map-file    (some->> (str src-dir path ".map")
                                 (find-file fileset))
           :cljs-file   (some->> (.replace (str src-dir path) ".js" ".cljs")
                                 (find-file fileset))
-          :target-map (io/file (str tmp-dir "/node_modules") (str ns ".map"))
-          :target-cljs (io/file (str tmp-dir "/node_modules") (.replace ns ".js" ".cljs"))
+          :target-map (io/file (str tmp-dir "/" output-dir) (str ns ".map"))
+          :target-cljs (io/file (str tmp-dir "/" output-dir)
+                                (.replace ns ".js" ".cljs"))
           :ns ns
           })
        dependency-maps))
@@ -75,18 +80,26 @@
 
 (defn setup-links-for-dependency-map
   [files-to-process]
-  (doseq [{:keys [target-file
-                  source-file
-                  map-file
-                  cljs-file
-                  target-map
-                  target-cljs
-                  ns]} files-to-process]
-    (when source-file
-      (io/make-parents target-file)
-      (new-hard-link source-file target-file)
-      (when (and (fl/exists? map-file)
-                 (fl/exists? cljs-file))
-        (new-hard-link map-file target-map)
-        (new-hard-link cljs-file target-cljs)))))
-
+  (let [tm (System/currentTimeMillis)]
+    (doseq [{:keys [target-file
+                    source-file
+                    map-file
+                    cljs-file
+                    target-map
+                    target-cljs
+                    ns]} files-to-process]
+      (when source-file
+        (io/make-parents target-file)
+        (spit
+         target-file
+         (reduce-kv #(.replace %1 %2 %3)
+                    (slurp source-file)
+                    {"goog.require('" "require('./"
+                     "goog.require(\"" "require(\"./"}))
+        (when (and (fl/exists? map-file)
+                   (fl/exists? cljs-file))
+          (new-hard-link map-file target-map)
+          (new-hard-link cljs-file target-cljs))))
+    (u/dbug "Time to copy and rewrite js files to %s: %s ms\n"
+            output-dir
+            (- (System/currentTimeMillis) tm))))
