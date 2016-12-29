@@ -291,4 +291,6 @@ For the output-dir and output-to options, see the ClojureScript compiler options
 (deftask patch-rn
   "DEPRECATED, no longer needed"
   [a app-dir OUT str "Path to the React Native app-dir containing package.json"]
-  (util/info "patch-rn is DEPRECATED since it is no longer needed\n"))
+  (util/info "patch-rn is DEPRECATED since it is no longer needed\n")
+  (c/with-pre-wrap fileset
+    fileset))
