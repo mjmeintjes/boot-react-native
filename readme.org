@@ -74,7 +74,7 @@ This has been tested on Android and IOS.
 There is an example app to demonstrate using this plugin.
 
 To start it up:
- * Run =npm install= inside example/app
+ * Run =npm install= or =yarn= inside example/app
  * Run =boot dev= inside example
  * For Android:
    * Connect device to computer
