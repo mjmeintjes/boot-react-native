@@ -10,7 +10,7 @@ if (typeof global !== 'undefined') {
     //React Native throws error because it does not support group logging
     console.groupCollapsed = console.groupCollapsed || console.log;
     console.group = console.group || console.log;
-    console.groupEnd = function() {};
+    console.groupEnd = console.groupEnd || function() {};
 
     goog.provide = function(name) {
         if (goog.isProvided_(name)) {
