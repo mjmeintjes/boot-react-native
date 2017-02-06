@@ -1,4 +1,4 @@
-(set-env! :resource-paths #{"src"}
+(set-env! :resource-paths #{"src" "resources"}
           :dependencies '[[pandeiro/boot-http "0.7.1-SNAPSHOT" :scope  "test"]
                           [com.cemerick/url "0.1.1"]
                           [me.raynes/conch "0.8.0"]
