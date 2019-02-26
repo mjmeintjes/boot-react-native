@@ -1,12 +1,14 @@
 * Boot React Native
 
+**Boot React Native is unmaintained**
+
+For an alternative that works much better, please check out re-natal: https://github.com/drapanjanas/re-natal
+
 [[https://clojars.org/boot-react-native][https://img.shields.io/clojars/v/boot-react-native.svg]]
 
 Provides several tasks that helps integrate ClojureScript with the React Native packager and build process
 
 ** Note on version 0.3
-
-*NOTE*: Boot React Native is being prepared for its upcoming =0.3= release. Changes in latest =master= bring usability improvements as well as compatibility with the current release of React Native, so please try version =0.3=. There are also breaking changes; please refer to the [[https://github.com/mjmeintjes/boot-react-native/blob/master/release_notes.md][release notes]] for important upgrade notes.
 
 A guide to =0.3= is available at [[http://presumably.de/boot-react-native.html][Getting Started with Boot React Native]], as well as a [[https://github.com/mjmeintjes/boot-react-native/wiki/Troubleshooting][Troubleshooting Guide]].
 
