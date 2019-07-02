@@ -8,7 +8,7 @@
             [me.raynes.conch :refer [programs with-programs let-programs] :as sh]
             [mattsum.impl
              [boot-helpers :as bh :refer [exit-code find-file shell]]
-             [goog-deps :refer [get-files-to-process setup-links-for-dependency-map]]]))
+             [goog-deps :as gd :refer [get-files-to-process setup-links-for-dependency-map]]]))
 
 ;;(use 'alex-and-georges.debug-repl)
 
@@ -73,7 +73,7 @@
             new-script (str "
 var CLOSURE_UNCOMPILED_DEFINES = null;
 require('./" out-dir "goog/base.js');
-require('" boot-main "');
+require('./" gd/output-dir "/" boot-main "');
 ")]
         (spit out-file new-script)
         (-> fileset
@@ -260,59 +260,37 @@ For the output-dir and output-to options, see the ClojureScript compiler options
   []
   (let [running (atom false)]
     (c/with-post-wrap fileset
-      (when-not @running ;; make sure we run only once
-        (reset! running true)
-        (binding [util/*sh-dir* "app"]
-          (util/dosh "node" "node_modules/react-native/local-cli/cli.js" "run-ios")))
-      fileset)))
+                      (when-not @running                    ;; make sure we run only once
+                        (reset! running true)
+                        (binding [util/*sh-dir* "app"]
+                          (util/dosh "node" "node_modules/react-native/local-cli/cli.js" "run-ios")))
+                      fileset)))
 
 (deftask print-ios-log
   "Print iOS simulator log"
   [g grep GREP str "Only print lines containg GREP, using fgrep(1). Defaults to printing all lines"]
   (let [!running (atom false)]
     (c/with-pre-wrap fileset
-      (when-not @!running ;; make sure we run only once
-        (reset! !running true)
-        (future (bh/tail-fn bh/newest-log grep)))
-      fileset)))
+                     (when-not @!running                    ;; make sure we run only once
+                       (reset! !running true)
+                       (future (bh/tail-fn bh/newest-log grep)))
+                     fileset)))
 
 (deftask bundle
   "Bundle the files specified"
   [f files ORIGIN:TARGET {str str} "{origin target} pair of files to bundle"]
-  (let  [tmp (c/tmp-dir!)]
+  (let [tmp (c/tmp-dir!)]
     (c/with-pre-wrap fileset
-      (doseq [[origin target] files]
-        (let [in  (bh/file-by-path origin fileset)
-              out (clojure.java.io/file tmp target)]
-          (clojure.java.io/make-parents out)
-          (bh/bundle* in out tmp)))
-      (-> fileset (c/add-resource tmp) c/commit!))))
+                     (doseq [[origin target] files]
+                       (let [in  (bh/file-by-path origin fileset)
+                             out (clojure.java.io/file tmp target)]
+                         (clojure.java.io/make-parents out)
+                         (bh/bundle* in out tmp)))
+                     (-> fileset (c/add-resource tmp) c/commit!))))
 
 (deftask patch-rn
-  "Patch the node module `react-native' to recognize goog.require as a dependency
-
-Currently works with react-native >= 0.29.0
-
-Note that you will need to `npm install' before calling this task. The task
-checks if the patch has already been applied and, if so, skips it silently. As a
-result it can be safely run on every build.
-
-See https://github.com/mjmeintjes/boot-react-native/issues/49"
-  [a app-dir OUT str  "Path to the React Native app-dir containing package.json"]
-  (let [app-dir (or app-dir "app")]
-    (c/with-pre-wrap fileset
-      (let [path (bh/write-resource-to-path "patch-rn.sh" "patch-rn.sh")
-            path2 (bh/write-resource-to-path "rn-goog-require.patch" "rn-goog-require.patch")]
-        (util/info "Checking if React Native needs to be patched...\n")
-        (assert (-> (str app-dir "/package.json") io/as-file .exists)
-                (str "Did not find expected file package.json in " app-dir))
-        (assert (-> (str app-dir "/node_modules/react-native") io/as-file .exists)
-                (str "Did not find expected directory node_modules/react-native in " app-dir
-                     ". Did you run `npm install?'"))
-        (try
-          (util/dosh "bash" (str path "/patch-rn.sh") (str path2 "/rn-goog-require.patch") app-dir)
-          (catch Exception e
-            (util/warn "Could not patch React Native in app-dir `%s'. Possibly incompatible version of react-native?\n"
-                       app-dir)
-            (throw e)))
-        fileset))))
+  "DEPRECATED, no longer needed"
+  [a app-dir OUT str "Path to the React Native app-dir containing package.json"]
+  (util/info "patch-rn is DEPRECATED since it is no longer needed\n")
+  (c/with-pre-wrap fileset
+    fileset))

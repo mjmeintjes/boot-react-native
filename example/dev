@@ -1,2 +1,2 @@
 #!/bin/bash
-(cd .. && boot build) && boot dev "$@"
+(cd .. && boot inst) && boot dev "$@"

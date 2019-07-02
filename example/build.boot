@@ -24,10 +24,7 @@
  '[boot.core                    :as     b]
  '[boot.util                    :as     u]
  '[clojure.string               :as     s]
- '[mattsum.boot-react-native    :as     rn :refer [patch-rn]]
- )
-
-(task-options! patch-rn {:app-dir "app"})
+ '[mattsum.boot-react-native    :as     rn])
 
 (deftask build
   []
@@ -46,7 +43,7 @@
 (deftask dev
   "Build app and watch for changes"
   []
-  (comp (patch-rn)
+  (comp
         (watch)
         (build)
         (speak)))
@@ -55,7 +52,6 @@
   "Build a distributable bundle of the app"
   []
   (comp
-   (patch-rn)
    (cljs :ids #{"dist"})
    (rn/bundle :files {"dist.js" "main.jsbundle"})
    (target :dir ["app/dist"])))
